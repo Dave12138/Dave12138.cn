@@ -112,8 +112,9 @@ public class DatabaseConnection {
 
     public boolean removeFile(String fileName) throws SQLException {
         fileName = getFixedName(fileName);
-        Statement statement = connection.createStatement();
-        int res = statement.executeUpdate(String.format("update files set removed = 1 where `name` like '%s.part%%'", fileName));
+        PreparedStatement statement = connection.prepareStatement("update files set removed = 1 , `name` = concat('(removed)',`name`)  where `name` like ?");
+        statement.setString(1, fileName + ".part%");
+        int res = statement.executeUpdate();
         statement.close();
         return res > 0;
     }
