@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>网易云外链表单</title>
+</head>
+<body>
+<form action="//music.163.com/outchain/player" enctype="multipart/form-data" method="get">
+    <b>网易云外链</b><br/>
+    <label title="0:歌单
+1:专辑
+2:歌曲
+3:电台歌曲
+4:电台歌单">
+        播放外链类型<input id="music_type" name="type" onchange="document.cookie='music_type='+this.value + ';path=/html'" onload="let music_type=this" type="number"
+                     value="1"/>
+    </label>
+    <br/>
+    <label>
+        专辑/歌单/歌曲id<input id="music_id" name="id" onchange="document.cookie='music_id='+this.value + ';path=/html'" onload="let music_id=this" type="text"
+                         value="91843186"/>
+    </label>
+    <input type="submit"/>
+</form>
+<script>
+    (function () {
+        let coo = document.cookie.split(";");
+        for (let i = 0; i < coo.length; i++) {
+            if (/music_type=(.+)/.test(coo[i])) {
+                music_type.value = RegExp.$1;
+            }
+            if (/music_id=(.+)/.test(coo[i])) {
+                music_id.value = RegExp.$1;
+            }
+        }
+    })();
+</script>
+</body>
+</html>

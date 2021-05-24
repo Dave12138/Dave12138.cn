@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <request-character-encoding>UTF-8</request-character-encoding>
+    <!--这玩意好像没用-->
+    <welcome-file-list>
+        <welcome-file>/a</welcome-file>
+    </welcome-file-list>
+    <!--
+        缺省
+    -->
+    <servlet>
+        <servlet-name>StartServlet</servlet-name>
+        <servlet-class>cn.dave12138.servlet.MainPageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StartServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+        <url-pattern></url-pattern>
+    </servlet-mapping>
+
+
+    <!--
+    图片
+    CSS
+    HTML
+    js
+    -->
+    <servlet>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>cn.dave12138.servlet.FileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FileServlet</servlet-name>
+        <url-pattern>/images/*</url-pattern>
+        <url-pattern>/CSS/*</url-pattern>
+        <url-pattern>/html/*</url-pattern>
+        <url-pattern>/JavaScript/*</url-pattern>
+        <url-pattern>/files/*</url-pattern>
+    </servlet-mapping>
+
+    <!--    上传-->
+    <servlet>
+        <servlet-name>UploadServlet</servlet-name>
+        <servlet-class>cn.dave12138.servlet.UploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UploadServlet</servlet-name>
+        <url-pattern>/upload/</url-pattern>
+    </servlet-mapping>
+
+    <!--    图站-->
+    <servlet>
+        <servlet-name>PicListServlet</servlet-name>
+        <servlet-class>cn.dave12138.servlet.PicListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PicListServlet</servlet-name>
+        <url-pattern>/images/</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>SSL</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+</web-app>

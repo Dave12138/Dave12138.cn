@@ -1,0 +1,773 @@
+<!--
+
+  Author: Dave_12138
+  Date: 2021/5/22
+  CC BY-NC-SA 3.0
+-->
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        .super-table {
+            margin: auto;
+            background-color: #DDDDDD;
+            border-radius: 10px;
+        }
+
+        #base {
+            text-align: center;
+            position: absolute;
+            height: 90vh;
+            overflow: paged-y;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        th {
+            text-align: center;
+        }
+
+        .ss2 td div {
+            width: 100%;
+            position: absolute;
+            overflow: auto;
+            max-height: 30vh;
+            height: 30vh;
+            top: 0;
+        }
+
+        .ss3 td div {
+            width: 100%;
+            position: absolute;
+            overflow: auto;
+            max-height: 30vh;
+            height: 30vh;
+            top: 0;
+        }
+
+        .ss2 td {
+            width: 150px;
+            height: 30vh;
+            position: relative;
+        }
+
+        .ss3 td {
+            width: 150px;
+            height: 30vh;
+            position: relative;
+        }
+
+        .threadTable th {
+            padding: 2px;
+            height: auto;
+            max-height: 5em;
+            background-color: #ee6622;
+        }
+
+        .threadTable td {
+            padding: 2px;
+            height: auto;
+            max-height: 5em;
+            background-color: #1080a0;
+        }
+
+        .threadTable {
+            width: 100%;
+        }
+
+        #memBitMapTable td {
+            padding: 2px;
+            height: auto;
+            max-height: 5em;
+            background-color: #1080a0;
+        }
+
+        #memBitMapTable {
+            width: 100%;
+        }
+
+        #log1 {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            resize: none;
+        }
+
+        #PCBDetails th {
+
+            background-color: #000000;
+            color: white;
+            padding: 0 40px;
+            border-radius: 10px;
+        }
+
+        #PCBDetails td {
+            background-color: #DDDDDD;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .sub-title {
+            height: 0;
+            padding-bottom: 7%;
+            width: 100%;
+            min-width: 200px;
+            background-color: #000000;
+            text-align: center;
+            border: 2px #FFFFFF;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .sub-title-text {
+            color: #FFFFFF;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(200, 200, 200, 0.8);
+        }
+    </style>
+    <title>操作系统实验</title>
+</head>
+
+<body>
+
+<div id="base">
+    <table class="super-table">
+        <tr>
+            <td class="sub-title" colspan="8" onclick="hideControl('ss1')">
+                <a class="sub-title-text">全局设置</a>
+            </td>
+        </tr>
+        <tr class="ss1">
+            <td colspan="8">
+                <form id="systemOption" method="get">
+                    <label>
+                        内存大小
+                        <input id="systemMemSize" max="2147482624" min="1" name="systemMemSize" type="number"
+                               value="32768"/>
+                    </label>
+                    <label>
+                        内存块大小
+                        <input id="systemChunkSize" max="2147482624" min="1" name="systemChunkSize" type="number"
+                               value="1024"/>
+                    </label>
+                    <label>
+                        外存对换区大小
+                        <input id="systemHardDriveSize" max="2147482624" min="1" name="systemHardDriveSize" type="number"
+                               value="2147482624"/>
+                    </label>
+                    <label>
+                        <input checked="checked" id="switchType1" name="switchType" type="radio" value="0"/>FIFO
+                    </label>
+                    <label>
+                        <input id="switchType2" name="switchType" type="radio" value="1"/>LRU
+                    </label>
+                    <input title="保存设置会重置程序" type="submit" value="确定"/>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td class="sub-title" colspan="8" onclick="hideControl('ss2');hideControl('ss2-t')">
+                <a class="sub-title-text">程序/进程调度</a>
+            </td>
+        </tr>
+        <tr class="ss2-t">
+            <td>就绪</td>
+            <td>阻塞</td>
+            <td>CPU</td>
+            <td>新建</td>
+            <td>控制</td>
+            <td><label for="log1">日志1</label></td>
+        </tr>
+        <tr class="ss2">
+            <td>
+                <div>
+                    <table class="threadTable" id="readyTable">
+
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <table class="threadTable" id="blockTable">
+
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <table class="threadTable" id="CPUTable">
+
+                    </table>
+                </div>
+            </td>
+            <td>
+                <form id="PCBCreateForm">
+                    <label>进程名称<input minlength="1" required="required" type="text"/></label><br/>
+                    <label>进程大小<input min="0" required="required" type="number"/></label><br/>
+                </form>
+                <input onclick="onProgressCreateButton();return false;" type="submit" value="新建进程"/>
+            </td>
+            <td>
+                <button onclick="onProgressBlockButton()">阻塞进程</button>
+                <button onclick="onProgressEndButton()">结束进程</button>
+            </td>
+            <td>
+                <textarea id="log1">
+
+                </textarea>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="sub-title" colspan="8" onclick="hideControl('ss3');hideControl('ss3-t')">
+                <a class="sub-title-text">分页请求内存管理</a>
+            </td>
+        </tr>
+        <tr class="ss3-t">
+            <td>地址转换</td>
+            <td colspan="2">内存bitMap</td>
+            <td>临时输出窗口</td>
+        </tr>
+        <tr class="ss3">
+            <td>
+                <label for="logicAddrInput">逻辑地址</label><input id="logicAddrInput"/><br/>
+                <button onclick="onTansAddr()">读取</button>
+                <button onclick="onTansAddrWithWrite()">读写</button>
+            </td>
+            <td colspan="2">
+                <div>
+                    <table id="memBitMapTable">
+
+                    </table>
+                </div>
+            </td>
+            <td>
+                <input id="tempOut1" type="text"/>
+            </td>
+            <td>
+                <button onclick="document.getElementById('tempOut1').value=CPU.pageLostProbability">缺页率</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div
+        class="canvas hidden">
+    <table class="sub-title-text" style="color: black;background-color: #FFFFFF;border: 2px solid">
+        <tr>
+            <td>详情</td>
+            <td>
+                <button onclick="hideControl('canvas')">X</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div style="overflow: auto;max-height: 60vh">
+                    <table id="PCBDetails" style="border: 2px solid">
+
+                    </table>
+                </div>
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+
+</div>
+<script>
+    //全局更新ui
+    function updateUI() {
+        function updateTable(tableId, queue) {
+            tableId.innerHTML = "<tr><th>进程名</th><th>大小</th><th>页表</th></tr>";
+            for (let i = 0; i < queue.length; i++) {
+                let line = "";
+                for (let j = 0; j < queue[i].pages.length; j++) {
+                    line += `<tr><td>${j}</td>${queue[i].pages[j]}</tr>`;
+                }
+                let pagesText = "<a onclick=\"showPagesDetail('" + line + "')\">详细</a>";
+                tableId.innerHTML += `<tr><td>${queue[i].programName}</td><td>${queue[i].usedSize}</td><td>${pagesText}</td></tr>`;
+            }
+
+        }
+
+        updateTable(readyTable, readyQueue);
+        updateTable(blockTable, blockQueue);
+        if (CPU != null) {
+            updateTable(CPUTable, [CPU]);
+        }
+        let tm = "<tbody>";
+        for (let i = 0; i < memoryStatus.maxPages; i++) {
+            if (i % 16 === 0) {
+                if (i > 0)
+                    tm += "</td></tr>";
+                tm += "<tr><td>";
+            } else if (i % 8 === 0) {
+
+                tm += "</td><td>";
+            }
+            tm += memoryStatus.valueAt(i) ? 1 : 0;
+        }
+
+        tm += "</td></tr></tbody>";
+        memBitMapTable.innerHTML = tm;
+    }
+
+    function showPagesDetail(strArr) {
+        document.getElementById("PCBDetails").innerHTML = "<tr><th>逻辑号</th><th>内存物理页号</th><th>在内存中</th><th>访问字段</th><th>修改标志</th><th>外存物理页号</th></tr>" + strArr;
+        hideControl('canvas');
+    }
+</script>
+<script>
+    class Page {
+        addr; //这里是编号而不是准确地址
+        inMem; //是否在物理内存中
+        accessMark; //访问字段，根据全局设置调整排序策略
+        isChanged; //是否被修改
+        ssdAddr; //这里是编号而不是准确地址，本属性是指外存
+        constructor(ssdAddr) {
+            this.ssdAddr = ssdAddr;
+            this.addr = null;
+            this.inMem = false;
+            this.accessMark = null;
+            this.isChanged = false;
+        }
+
+        toString() {
+            return `<td>${this.addr}</td><td>${this.inMem}</td><td>${this.accessMark}</td><td>${this.isChanged}</td><td>${this.ssdAddr}</td>`;
+        }
+    }
+
+    class PCB {
+        programName;
+        pages;
+        usedSize;
+        activePageLimit;
+        pageLostTimes;
+        accessTimes;
+
+        constructor(programName, sizeUsed) {
+            this.programName = programName;
+            this.usedSize = sizeUsed;
+            this.pages = new Array(Math.ceil(sizeUsed / chunkSize));
+            this.activePageLimit = 6 < this.pages.length ? 6 : this.pages.length;
+            this.pageLostTimes = 0;
+            this.accessTimes = 0;
+        }
+
+        get activePageCount() {
+            let count1 = 0;
+            for (let i = 0; i < this.pages.length; i++) {
+                if (this.pages[i].inMem) {
+                    count1++;
+                }
+            }
+            return count1;
+        }
+
+        get pageWillBeSwitchOut() {
+            let s = -1;
+            for (let i = 0; i < this.pages.length; i++) {
+                if (this.pages[i].inMem) {
+                    if (s < 0 || this.pages[i].accessMark < this.pages[s].accessMark) {
+                        s = i;
+                    }
+                }
+            }
+            return s < 0 ? undefined : this.pages[s];
+        }
+
+        get pageLostProbability() {
+            return this.pageLostTimes / this.accessTimes;
+        }
+
+        isShaking() {
+            return this.accessTimes > 12 && this.pageLostProbability > 0.8 && this.activePageCount === this.activePageLimit;
+        }
+
+        access(addr) {
+            let p = addr / chunkSize;
+            p = p | 0;
+            let q = addr % chunkSize;
+            readPage(this.pages[p]);
+            return this.pages[p].addr * chunkSize + q;
+        }
+
+        write(addr) {
+            let p = addr / chunkSize;
+            p = p | 0;
+            let q = addr % chunkSize;
+            readPage(this.pages[p]);
+            this.pages[p].isChanged = true;
+            return this.pages[p].addr * chunkSize + q;
+        }
+    }
+
+    function CPUCheck() {
+
+        if (CPU == null && readyQueue.length > 0) {
+            CPU = readyQueue.shift();
+            //CPU.access(0);
+        }
+
+    }
+
+
+    function createNewPcb(form) {
+        //新进程
+        let tmp = new PCB(form.elements[0].value, form.elements[1].value | 0);
+        if (tmp.usedSize < 1 || tmp.programName.length < 1) {
+            alert("需要输入完整进程信息");
+            return;
+        }
+        //从外存中分配页给它
+        for (let i = 0; i < tmp.pages.length; i++) {
+            let r = ssdStatus.firstUnusedIndex();
+            if (r !== undefined) {
+                ssdStatus.changeValueAt(r);
+                tmp.pages[i] = new Page(r);
+            } else {
+                //外存已满
+                //回收所有分配给新进程的外存
+                for (let j = 0; j < i; j++) {
+                    ssdStatus.changeValueAt(tmp.pages[j].ssdAddr);
+                }
+                alert("外存不足，请求拒绝");
+                return;
+            }
+        }
+        //分配完外存后将其加入就绪队列
+        readyQueue.push(tmp);
+    }
+
+
+    //全部物理内存回收
+    function recyclePages(pages) {
+        for (let i = 0; i < pages.length; i++) {
+            recyclePage(pages[i]);
+        }
+
+    }
+
+    //换出或回收某物理内存中页，返回腾出来的内存块
+    function recyclePage(page) {
+        if (page.inMem) {
+            if (page.isChanged) {
+                log1.value += `物理内存块${page.addr}写回外存块${page.ssdAddr}\n`;
+                page.isChanged = false;
+            }
+            log1.value += `回收物理内存块${page.addr}\n`;
+            memoryStatus.changeValueAt(page.addr);
+            page.inMem = false;
+            let st = page.addr;
+            page.addr = null;
+            page.accessMark = null;
+            return st;
+        }
+        return undefined;
+    }
+
+    //全局换出，返回腾出来的物理内存
+    function systemSwitchOut() {
+        let x = null;
+        for (let i = 0; i < blockQueue.length; i++) {
+            let l = blockQueue[i].pageWillBeSwitchOut;
+            if (l !== undefined) {
+                if (null == x || x.accessMark > l.accessMark) {
+                    x = l;
+                }
+            }
+        }
+        for (let i = 0; i < readyQueue.length; i++) {
+            let l = readyQueue[i].pageWillBeSwitchOut;
+            if (l !== undefined) {
+                if (null == x || x.accessMark > l.accessMark) {
+                    x = l;
+                }
+            }
+        }
+        return x != null ? recyclePage(x) : undefined;
+
+    }
+
+    //回收外存
+    function recycleSSDPages(pages) {
+        for (let i = 0; i < pages.length; i++) {
+            recycleSSDPage(pages[i]);
+        }
+
+    }
+
+    function recycleSSDPage(page) {
+        if (page.inMem) {
+            alert("调试信息：调用顺序错误");
+        }
+        log1.value += `回收外存块${page.ssdAddr}\n`;
+        ssdStatus.changeValueAt(page.ssdAddr);
+
+    }
+
+    //换入页
+    function switchInPage(page) {
+        if (page.inMem) {
+            alert("调试信息:ERROR");
+            return;
+        }
+        let k = undefined;
+        if (CPU.activePageCount < CPU.activePageLimit) {
+            k = memoryStatus.firstUnusedIndex();
+        }
+        if (k === undefined) {
+            k = recyclePage(CPU.pageWillBeSwitchOut);
+
+        }
+        if (k === undefined) {
+            k = systemSwitchOut();
+        }
+        if (k === undefined) {
+            alert("调试信息：内存过小");
+            exit(-1);
+        }
+        memoryStatus.changeValueAt(k);
+        page.addr = k;
+        log1.value += `从外存块${page.ssdAddr}换入到物理内存块${page.addr}\n`;
+
+        page.inMem = true;
+        page.isChanged = false;
+
+
+    }
+
+    function readPage(page) {
+        if (!page.inMem) {
+            switchInPage(page);
+            CPU.pageLostTimes++;
+            page.accessMark = new Date().getTime();
+        }
+        if (switchPlan === 1) {
+            page.accessMark = new Date().getTime();
+        }
+        CPU.accessTimes++;
+        log1.value += `读取物理内存块${page.addr}\n`
+
+    }
+
+    //bitmap应记录内存中页的使用状况
+    //写都写了，外存使用状况也用它记吧
+    class BitMap {
+        maxPages;
+        map;
+
+        constructor(pageMaxLimit) {
+            this.maxPages = pageMaxLimit;
+            this.map = new Array(Math.ceil(pageMaxLimit / 32));
+            for (let i = 0; i < this.map.length; i++) {
+                this.map[i] = 0;
+            }
+        };
+
+        valueAt(index) {
+            if (index > this.maxPages) {
+                return undefined;
+            }
+            return (this.map[(index / 32) | 0] & mapDic[index % 32]) !== 0;
+
+        }
+
+        changeValueAt(index) {
+            if (index >= this.maxPages) {
+                return undefined;
+            }
+            this.map[(index / 32) | 0] ^= mapDic[index % 32];
+            return (this.map[(index / 32) | 0] & mapDic[index % 32]) > 0;
+        }
+
+        firstUnusedIndex() {
+            let a = this.__firstUnusedIndex();
+            return a < this.maxPages ? a : undefined;
+        }
+
+        __firstUnusedIndex() {
+            for (let i = 0; i < this.map.length; i++) {
+                if (this.map[i] !== -1) {
+                    for (let j = 0; j < 32; j++) {
+                        if ((this.map[i] & mapDic[j]) === 0) {
+                            return i * 32 + j;
+                        }
+                    }
+                }
+            }
+            return undefined;
+        }
+    }
+</script>
+<script>
+    //UI
+    let PCBCreateForm;
+    let CPUTable;
+    let blockTable;
+    let readyTable;
+    let systemOption;
+    let log1;
+    let logicAddrInput;
+    let memBitMapTable;
+    //实验1
+    let CPU = null;
+    let readyQueue;
+    let blockQueue;
+    //实验2
+    let memoryStatus;//内存分配情况
+    let ssdStatus;//外存分配情况
+    let chunkSize;//块（页）大小，int
+    let mapDic = [];//位操作辅助字典
+
+    //0:FIFO先进先出
+    //1:LRU喜新厌旧
+    let switchPlan = 0;
+
+    //初始化
+    (function () {
+        //抓取UI
+        PCBCreateForm = document.getElementById("PCBCreateForm");
+        CPUTable = document.getElementById("CPUTable");
+        blockTable = document.getElementById("blockTable");
+        readyTable = document.getElementById("readyTable");
+        systemOption = document.getElementById("systemOption");
+        log1 = document.getElementById("log1");
+        logicAddrInput = document.getElementById("logicAddrInput");
+        memBitMapTable = document.getElementById("memBitMapTable");
+        //从request导入全局设置
+        let reqs = window.location.search.split('&');
+        for (let i = 0; i < reqs.length; i++) {
+            if (/systemMemSize=(.*)/.test(reqs[i])) {
+                systemOption.elements[0].value = RegExp.$1;
+            }
+            if (/systemChunkSize=(.*)/.test(reqs[i])) {
+                systemOption.elements[1].value = RegExp.$1;
+            }
+            if (/systemHardDriveSize=(.*)/.test(reqs[i])) {
+                systemOption.elements[2].value = RegExp.$1;
+            }
+            if (/switchType=(.*)/.test(reqs[i])) {
+                document.getElementsByName("switchType")[RegExp.$1 ^ 1].checked = null;
+                document.getElementsByName("switchType")[RegExp.$1].checked = "checked";
+                switchPlan = RegExp.$1 | 0;
+            }
+        }
+        //凑整
+        (function () {
+            systemOption.elements[0].value = Math.ceil(systemOption.elements[0].value / (systemOption.elements[1].value)) * systemOption.elements[1].value;
+            systemOption.elements[2].value = Math.ceil(systemOption.elements[2].value / (systemOption.elements[1].value)) * systemOption.elements[1].value;
+        })();
+        //检查参数合法性
+        (function () {
+            //true:s是32位正整数或整数字符串
+            function foo(s) {
+                return s / 1 === (s | 0) && s > 0;
+            }
+
+            //true:s是1或0,不能是字符串
+            function fee(s) {
+                return ((s & 1) === s);
+            }
+
+            //清空设置
+            function crash(s = "") {
+                alert("全局设置不符合规范  " + s);
+                window.location.search = "";
+                exit(-1);
+            }
+
+            if (!foo(systemOption.elements[0].value) || !foo(systemOption.elements[1].value) || !foo(systemOption.elements[2].value) || !fee(switchPlan)) {
+                crash();
+            }
+            if ((0 | systemOption.elements[0].value) < systemOption.elements[1].value || (0 | systemOption.elements[2].value) < systemOption.elements[1].value) {
+                crash("内存或外存小于块大小");
+            }
+            if (Math.floor(systemOption.elements[2].value / systemOption.elements[1].value) < 6 || Math.floor(systemOption.elements[0].value / systemOption.elements[1].value) < 6) {
+                crash("内存/外存大小不足六倍页大小")
+            }
+        })();
+        //就绪、阻塞队列
+        readyQueue = [];
+        blockQueue = [];
+        //初始化bitmap
+        memoryStatus = new BitMap(Math.floor(systemOption.elements[0].value / systemOption.elements[1].value));
+        ssdStatus = new BitMap(Math.floor(systemOption.elements[2].value / systemOption.elements[1].value));
+        chunkSize = systemOption.elements[1].value | 0;
+        for (let i = 31; i > -1; i--) {
+            mapDic.push(1 << i);
+        }
+        updateUI();
+    })();
+</script>
+<script>
+    //响应
+    function onProgressCreateButton() {
+        log1.value = "";
+        createNewPcb(PCBCreateForm);
+        CPUCheck();
+        updateUI();
+    }
+
+    function onProgressBlockButton() {
+        log1.value = "";
+        if (CPU != null) {
+            blockQueue.push(CPU);
+            CPU = null;
+        }
+        CPUCheck();
+        updateUI();
+    }
+
+    function onProgressEndButton() {
+        log1.value = "";
+        if (CPU != null) {
+            recyclePages(CPU.pages);
+            recycleSSDPages(CPU.pages);
+            CPU = null;
+        }
+        CPUCheck();
+        updateUI();
+    }
+
+    function onTansAddr() {
+        log1.value = "";
+        let x = CPU.access(logicAddrInput.value | 0);
+        document.getElementById("tempOut1").value = x;
+
+        CPUCheck();
+        updateUI();
+    }
+
+    function onTansAddrWithWrite() {
+        log1.value = "";
+
+        let x = CPU.write(logicAddrInput.value | 0);
+        document.getElementById("tempOut1").value = x;
+
+        CPUCheck();
+        updateUI();
+    }
+</script>
+<script src="/JavaScript/HiddenControl.js"></script>
+</body>
+
+</html>

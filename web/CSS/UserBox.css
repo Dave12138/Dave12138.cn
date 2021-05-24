@@ -1,0 +1,42 @@
+.ub1 {
+    width: 45px;
+    height: 57px;
+    background: #ffffff;
+    text-align: center;
+    font-size: 10pt;
+    line-height: 1em;
+    color: black;
+}
+
+.ub2 {
+    width: 45px;
+    height: 57px;
+    background: #ffffff;
+    text-align: center;
+    font-size: 13pt;
+    line-height: 1em;
+    color: black;
+}
+
+.ub3 {
+    width: 45px;
+    height: 57px;
+    background: #ff0000;
+    text-align: center;
+    font-size: 13pt;
+    line-height: 1em;
+    color: black;
+}
+
+.ub-text1 {
+    font-size: 10pt;
+    padding: 4pt;
+    line-height: 1.25em;
+    color: black;
+}
+
+.uo1 {
+    float: left;
+    border: 1px solid #cbffff;
+    margin: 1px;
+}

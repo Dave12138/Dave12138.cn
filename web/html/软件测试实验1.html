@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>软件测试</title>
+    <style type="text/css">
+        .super-table {
+            margin: auto;
+            background-color: #DDDDDD;
+            border-radius: 10px;
+        }
+
+        #base {
+            text-align: center;
+            position: absolute;
+            height: 90vh;
+            overflow: paged-y;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #u3_div {
+            height: 42vh;
+            width: 40vh;
+        }
+
+
+        .cube {
+            height: 100%;
+            width: 100%;
+            background-color: #ff66cc;
+            text-align: center;
+            border: 2px #FFFFFF;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .sub-title {
+            height: 0;
+            padding-bottom: 15%;
+            width: 100%;
+            min-width: 8vh;
+            background-color: #000000;
+            text-align: center;
+            border: 2px #FFFFFF;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .gray-cube {
+            height: 100%;
+            width: 100%;
+            background-color: #85a0ff;
+            text-align: center;
+            border: 2px #FFFFFF;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .cube-text {
+            color: #FFFFFF;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        th {
+            height: 100%;
+            width: 14%;
+            background-color: #99CCFF;
+            text-align: center;
+            border: 2px #FFFFFF;
+            border-radius: 6px;
+        }
+
+        #phone_input {
+            width: 100%;
+        }
+
+        .phone_legal {
+            background-color: #CCFF00;
+        }
+
+        .phone_illegal {
+            background-color: red;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+
+</head>
+<body>
+<div id="base">
+    <table class="super-table">
+        <tbody>
+        <tr>
+            <td colspan="4" onclick="hideControl('hi1')">
+                <div class="sub-title">
+                    <a class="cube-text">程序1</a>
+                </div>
+            </td>
+        </tr>
+        <tr class="hi1">
+            <!-- 年份 (文本框) -->
+            <td id="u4">
+                <div class="" id="u4_div"></div>
+                <input class="u4_input" id="u4_input" onchange="updateCalendar()" type="text" value="2021"/>
+            </td>
+            <!-- 年 (文本标签) -->
+            <td id="u1">
+                <p><label for="u4_input">年</label></p>
+
+            </td>
+            <!-- Unnamed (下拉列表) -->
+            <td id="u0">
+                <div id="u0_div"></div>
+                <select class="u0_input" id="u0_input" onchange="updateCalendar()">
+                    <option class="u0_input_option" value="1">1</option>
+                    <option class="u0_input_option" value="2">2</option>
+                    <option class="u0_input_option" value="3">3</option>
+                    <option class="u0_input_option" value="4">4</option>
+                    <option class="u0_input_option" selected="selected" value="5">5</option>
+                    <option class="u0_input_option" value="6">6</option>
+                    <option class="u0_input_option" value="7">7</option>
+                    <option class="u0_input_option" value="8">8</option>
+                    <option class="u0_input_option" value="9">9</option>
+                    <option class="u0_input_option" value="10">10</option>
+                    <option class="u0_input_option" value="11">11</option>
+                    <option class="u0_input_option" value="12">12</option>
+                </select>
+            </td>
+
+
+            <!-- 月 (文本标签) -->
+            <td id="u2">
+                <p><label for="u0_input">月</label></p>
+
+            </td>
+        </tr>
+        <tr class="hi1">
+            <!-- 日历 (矩形) -->
+            <td colspan="4" id="u3">
+                <div id="u3_div"></div>
+            </td>
+        </tr>
+        <tr class="hi1">
+            <td colspan="4" id="ans-box">
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" onclick="hideControl('hi2')">
+                <div class="sub-title">
+                    <a class="cube-text">程序2</a>
+                </div>
+            </td>
+        </tr>
+        <tr class="hi2">
+            <td colspan="4">
+                <label for="phone_input">输入号码</label><input id="phone_input"
+                                                            onchange="checkPhone()"
+                                                            onclick="(function (s) {s.className='';})(this);" type="text"/>
+            </td>
+        </tr>
+        <tr class="hi2">
+            <td colspan="4">
+                <a id="hi2Info">
+
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" onclick="hideControl('hi3')">
+                <div class="sub-title">
+                    <a class="cube-text">程序3</a>
+                </div>
+            </td>
+        </tr>
+        <tr class="hi3">
+
+            <td colspan="2">
+                <label for="rmbInput">rmb输入</label>
+
+            </td>
+            <td colspan="2">
+                <label for="rmbOutput">rmb大写输出</label>
+            </td>
+        </tr>
+        <tr class="hi3">
+
+            <td colspan="2">
+                <input id="rmbInput"
+                       onchange="(function (s) {document.getElementById('rmbOutput').value= rmbToCh(s);})(this.value);"
+                       type="text"/>
+            </td>
+            <td colspan="2">
+                <input id="rmbOutput" type="text"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    function updateCalendar() {
+        let year = parseInt(document.getElementById("u4_input").value);
+        let mon = parseInt(document.getElementById("u0_input").value) - 1;
+        let c = new Date();
+        c.setFullYear(year, mon, 1);
+        //alert(c.toLocaleDateString());
+        let g = document.getElementById("u3_div");
+        let str = "";
+        while (c.getDay() !== 1) {
+            c.setDate(c.getDate() - 1);
+        }
+        let preMon = c.getMonth();
+        //alert(c.toLocaleDateString());
+        let flag0 = true;
+        let flag1 = true;
+        while (flag0 || flag1 || c.getDay() !== 1) {
+            let cube;
+            if (c.getMonth() === mon) cube = "cube";
+            else cube = "gray-cube";
+            let tmp = `<td style='text-align: center'><div class='${cube}'><a class='cube-text' href='javascript:;' onclick='yesterday("${c.toLocaleDateString()}")' >${c.getDate()}</a></div></td>`
+            if (c.getDay() === 1) tmp = "<tr style='text-align: center'>" + tmp;
+            if (c.getDay() === 0) tmp = tmp + "</tr>";
+
+            c.setDate(c.getDate() + 1);
+            if (c.getMonth() !== preMon) flag0 = false;
+            if (!flag0 && c.getMonth() !== mon) flag1 = false;
+            str += tmp;
+        }
+        g.innerHTML = "<table style='text-align: center;height: 100%;width: 100%;'><thead><tr><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr></thead><tbody>" + str + "</tbody></table>"
+    }
+
+    updateCalendar();
+
+    function yesterday(date) {
+        if (!/^(\d+)\/(\d{1,2})\/(\d{1,2})$/.test(date)) {
+            document.getElementById("ans-box").innerText = "输入不符合规范";
+            return document.getElementById("ans-box").innerText;
+        }
+        let date2 = new Date();
+        date2.setFullYear(RegExp.$1 | 0, RegExp.$2 - 1, RegExp.$3 | 0);
+        date2.setDate(date2.getDate() - 1);
+        document.getElementById("ans-box").innerText = date + "前一天为" + date2.toLocaleDateString();
+        return document.getElementById("ans-box").innerText;
+    }
+
+    let hi2rtn = document.getElementById("hi2Info");
+
+    function checkPhone() {
+        let e = document.getElementById('phone_input');
+        hi2rtn.innerText = "";
+        let t = e.value;
+        let res = true;
+        if (!(t.length === 7 || t.length === 10)) {
+            hi2rtn.innerText = "长度不正确";
+            res = false;
+        } else if (!isDigit(t)) {
+            hi2rtn.innerText = "并非由数字组成";
+            res = false;
+        } else if (/[01]/.test(t.substr(-7, 1))) {
+            hi2rtn.innerText = "前缀码以0或1开头";
+            res = false;
+        }
+        if (res) {
+            e.className = 'phone_legal';
+        } else {
+            e.className = 'phone_illegal';
+        }
+    }
+
+
+    function isDigit(value) {
+        const patten = /^[0-9]*$/;
+        return !(patten.exec(value) == null || value == "");
+    }
+
+    function rmbToCh(s) {
+        let l = s + "";
+        l = l.trim();
+        if (!/^￥?\d{1,12}(\.\d{1,2})?$/.test(l)) {
+            return "Error:输入不符合格式";
+        }
+        if (/\./.test(l)) {
+            l = l.replace(/\./g, "元");
+        } else {
+            l = l + "元";
+        }
+        l = l.replace(/(\d)(\d{4}元)/, "$1万$2");
+        l = l.replace(/(\d)(\d{4}万)/, "$1亿$2");
+        l = l.replace(/(\d)(\d[万亿元])/g, "$1拾$2");
+        l = l.replace(/(\d)(\d[拾])/g, "$1佰$2");
+        l = l.replace(/(\d)(\d[佰])/g, "$1仟$2");
+        l = l.replace(/(元\d)/, "$1角");
+        l = l.replace(/(角\d)/, "$1分");
+        l = l.replace(/0[拾佰仟角分]/g, "0");
+        l = l.replace(/0+/g, "0");
+        l = l.replace(/0$/g, "");
+        l = l.replace(/0([万元])/g, "$1");
+        l = l.replace(/([\d])/g, function (s) {
+            let f = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+            return f[s | 0];
+        });
+        l = l.replace(/^(.?)壹拾/, "$1拾");
+        l = l.replace(/元$/, "元整");
+        l = l.replace(/^￥/, "人民币");
+        return l;
+    }
+</script>
+
+<script src="/JavaScript/HiddenControl.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页</title>
+    <style type="text/css">
+        .center {
+            text-align: center;
+        }
+
+        .base {
+            width: 98%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .active-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .link {
+            border: #EEEEEE 2px solid;
+            padding: 2px;
+            text-underline: none;
+            background-color: lightgrey;
+        }
+
+        .active-center {
+            border: 2px solid;
+        }
+
+        .center {
+            position: relative;
+            margin-top: 40px;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="base">
+    <div class="center" id="hello" onload="let hello=this;" style="font-size: 250%">尊敬的用户您好，<b>我是你爹</b></div>
+    <div class="center">
+        <form action="/upload/" class="active-center" enctype="multipart/form-data" id="fileSubmit" method="post"
+              onload="let fileSubmit=this">
+
+            <b>文件上传</b><br/>
+            <input id="file-input" name="uploadFiles" onchange="fileSubmit.submit()" type="file"/>
+            <div id="mess" onload="let mess=this"></div>
+        </form>
+    </div>
+
+    <!--<div class="center">-->
+
+    <!--    <a href="/images/">已存储图片</a>-->
+
+    <!--</div>-->
+
+
+    <div class="center">
+        <button onclick="window.location.href='/html/软件测试实验1.html'">软件测试实验</button>
+    </div>
+
+    <div class="center">
+        <button onclick="window.location.href='/html/操作系统实验.html'">操作系统实验</button>
+    </div>
+
+    <div class="center">
+        <button onclick="window.location.href='/html/幻影坦克.html'">幻影坦克</button>
+        (Created by <a href="https://github.com/wytk/">wytk</a>)
+    </div>
+
+</div>
+<script>
+
+    (function () {
+        let expr = /[cC]ommunism/;
+        if (expr.test(document.cookie) || expr.test(window.location.search) || new Date().toLocaleDateString().endsWith("7/1")) {
+            hello.innerHTML = "<a style='font-size: medium;'>“如果我们选择了最能为人类福利而劳动的职业，”" +
+                "“那么，重担就不能把我们压倒，因为这是为大家而献身；”<br/>" +
+                "“那时我们所感到的就不是可怜的、有限的、自私的乐趣,”" +
+                "“我们的幸福将属于千百万人，”" +
+                "</a> <br />" +
+                "<img src='images/Danghui.svg'/><br /> 我们的事业将默默地，但永恒发挥作用地存在下去<br />而面对我们的骨灰，高尚的人们将洒下热泪。<br /><i style='font-size: medium;color: gray; text-align: right'>——卡尔·马克思</i>";
+            setTimeout(function () {
+                if (!expr.test(document.cookie)) {
+                    setTimeout(function () {
+                        let today = new Date();
+                        today.setDate(today.getDate() + 1);
+                        document.cookie = "mode=communism;expires=" + today.toUTCString() + ";path=/html";
+                    }, 1);
+
+                }
+            }, 5);
+        }
+    })();
+    (function () {
+        let expr = /anti[-_]?entropy/;
+        if (expr.test(document.cookie) || expr.test(window.location.search) || new Date().toLocaleDateString().endsWith("7/1")) {
+            hello.innerHTML = "<a style='font-size: medium;'>人类有人类的底蕴" +
+                "</a> <br />" +
+                "<img src='images/Anti-Entropy.svg' style='width: 500px;'/><br /> 向一切虚伪的美好宣战";
+            setTimeout(function () {
+                if (!expr.test(document.cookie)) {
+                    setTimeout(function () {
+                        let today = new Date();
+                        today.setDate(today.getDate() + 1);
+                        document.cookie = "mode=anti_entropy;expires=" + today.toUTCString() + ";path=/html";
+                    }, 1);
+
+                }
+            }, 5);
+        }
+    })();
+    (function () {
+        if (/fileUploaded=(.+?\..+)&?/g.test(window.location.search)) {
+            mess.innerHTML = `<a href='${RegExp.$1}'>${decodeURI(RegExp.$1)}</a>上传完成`;
+        }
+        if (/failUploaded=(.+?\..+)&?/g.test(window.location.search)) {
+            mess.innerText = RegExp.$1 + "上传失败";
+        }
+    })();
+</script>
+</body>
+</html>
