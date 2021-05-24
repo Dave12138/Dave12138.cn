@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<!--
+    fork from: https://github.com/k-skye/gitkraken-chinese
+	由于对比当前已有中文json和新版本的英文json，快速得到新版本英文json中增加了哪些内容，这样我们就可以快速进行翻译。
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <style>
+        li {
+            list-style: none;
+        }
+
+        #result {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        #en {
+
+        }
+
+        .sp {
+            width: 30%
+        }
+    </style>
+    <title>GitKraken本地化文件对照</title>
+</head>
+
+<body>
+<div id="app">
+    <button @click="doCompare">对比</button>
+    <button @click="autoGen">自动生成json</button>
+    <p>
+        使用说明：上传命名为zh.json的旧版汉化文件和新版本地化文件string.json，然后点击对比，对比完成之后点击自动生成json，会打印到控制台。
+        将其格式化之后拷贝到中文json文件中(上一版本的，追加进去)，然后进行翻译修改就可以了。
+    </p>
+    <p>从<a href="Hello.html">欢迎页</a>上传文件 </p>
+    <div id="result">
+        <div id="en" class="sp">
+            <div class="title">
+                英文&emsp;共 {{menuStringsEN.length}} 个
+            </div>
+            <ul>
+                <li v-for="(item, index) in menuStringsEN" :key="index">{{index+1}}：{{item.key}}</li>
+            </ul>
+        </div>
+
+        <div id="zh" class="sp">
+            <div class="title">
+                中文&emsp;共 {{menuStringsZH.length}} 个
+            </div>
+            <ul>
+                <li v-for="(item, index) in menuStringsZH" :key="index">{{index+1}}：{{item.key}}</li>
+            </ul>
+        </div>
+
+        <div id="cy" class="sp">
+            <div class="title">
+                中文没有的&emsp;共 {{menuStringsCY.length}} 个
+            </div>
+            <ul>
+                <li v-for="(item, index) in menuStringsCY" :key="index">{{index+1}}：{{item.key}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+
+<script>
+
+
+    let app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                menuStringsEN: [],
+                menuStringsZH: [],
+                menuStringsCY: [],
+                enList: {},
+            }
+        },
+        mounted() {
+            this.loadJsonKeys('https://localhost/html/strings.json', 'en')
+            this.loadJsonKeys('https://localhost/html/zh.json', 'zh')
+        },
+        methods: {
+            doCompare() {
+                let vm = this
+                vm.menuStringsCY = []
+                vm.menuStringsEN.forEach(en => {
+                    let idx = vm.menuStringsZH.findIndex((zh) => zh.key == en.key)
+                    if (idx == -1) {
+                        vm.enList[en.key] = en.value
+                        vm.menuStringsCY.push(en)
+                    }
+                })
+            },
+            autoGen() {
+                console.log(JSON.stringify(this.enList))
+            },
+            loadJsonKeys(url, type) {
+                let vm = this;
+                let request = new XMLHttpRequest();
+                request.open("get", url);
+                request.send(null);
+                request.onload = function () {
+                    if (request.status == 200) {
+                        let json = JSON.parse(request.responseText)
+                        const menuStrings = json['menuStrings']
+                        for (var key in menuStrings) {
+                            if (type == 'en') {
+                                vm.menuStringsEN.push({
+                                    key: key,
+                                    value: menuStrings[key],
+                                    scope: 'menuStrings'
+                                })
+                            } else {
+                                vm.menuStringsZH.push({
+                                    key: key,
+                                    value: menuStrings[key],
+                                    scope: 'menuStrings'
+                                })
+                            }
+                        }
+                        const strings = json['strings']
+                        for (var key in strings) {
+                            if (type == 'en') {
+                                vm.menuStringsEN.push({
+                                    key: key,
+                                    value: strings[key],
+                                    scope: 'strings'
+                                })
+                            } else {
+                                vm.menuStringsZH.push({
+                                    key: key,
+                                    value: strings[key],
+                                    scope: 'strings'
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        },
+    });
+
+</script>
