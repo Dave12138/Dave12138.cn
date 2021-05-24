@@ -7,19 +7,17 @@
 <body>
 <form action="//music.163.com/outchain/player" enctype="multipart/form-data" method="get">
     <b>网易云外链</b><br/>
-    <label title="0:歌单
-1:专辑
-2:歌曲
-3:电台歌曲
-4:电台歌单">
-        播放外链类型<input id="music_type" name="type" onchange="document.cookie='music_type='+this.value + ';path=/html'" onload="let music_type=this" type="number"
-                     value="1"/>
-    </label>
+    <label for="music_type" title="0:歌单&#10;1:专辑&#10;2:歌曲&#10;3:电台歌曲&#10;4:电台歌单"> 播放外链类型</label>
+    <input id="music_type" name="type" onchange="document.cookie=`music_type=${this.value};path=/html`"
+           onload="let music_type=this" type="number" value="1"/>
+
     <br/>
-    <label>
-        专辑/歌单/歌曲id<input id="music_id" name="id" onchange="document.cookie='music_id='+this.value + ';path=/html'" onload="let music_id=this" type="text"
-                         value="91843186"/>
-    </label>
+    <label for="music_id"> 专辑/歌单/歌曲id</label>
+    <input id="music_id" name="id"
+           onchange="document.cookie=`music_id=${this.value};path=/html`"
+           onload="let music_id=this" type="text"
+           value="91843186"/>
+
     <input type="submit"/>
 </form>
 <script>
