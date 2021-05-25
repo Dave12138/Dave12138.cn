@@ -7,7 +7,7 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class DatabaseConnection {
@@ -44,17 +44,16 @@ public class DatabaseConnection {
     public DatabaseConnection(long sizeLimit, ServletContext con) throws SQLException {
 
         if (host == null) {
-
-            JSONParser parser = new JSONParser(con.getResourceAsStream("/json/database.json"));
-            LinkedHashMap<String, Object> map = null;
+            InputStream in = con.getResourceAsStream("/json/database.json");
             try {
-                map = parser.parseObject();
+                JSONParser parser = new JSONParser(in, "UTF-8");
+                Map<String, Object> map = parser.parseObject();
+                host = (String) map.get("SQL_HOST");
+                user = (String) map.get("SQL_USER");
+                password = (String) map.get("SQL_PASSWORD");
             } catch (ParseException e) {
                 throw new SQLException("数据库连接信息配置文件缺失");
             }
-            host = (String) map.get("SQL_HOST");
-            user = (String) map.get("SQL_USER");
-            password = (String) map.get("SQL_PASSWORD");
         }
         connection = DriverManager.getConnection(host, user, password);
         this.sizeLimit = sizeLimit < SIZE_LIMIT && sizeLimit > SIZE_MIN_LIMIT ? sizeLimit : SIZE_LIMIT;
