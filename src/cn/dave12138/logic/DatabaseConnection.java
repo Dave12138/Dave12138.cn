@@ -1,24 +1,32 @@
 package cn.dave12138.logic;
 
+import org.apache.tomcat.util.json.JSONParser;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.LinkedHashMap;
 import java.util.Vector;
 
 public class DatabaseConnection {
     public static final String SQL_DRIVER = "com.mysql.jdbc.Driver";
-    public static final String SQL_HOST = "jdbc:mysql://192.168.108.128:3306/MyWeb?useSSL=false";
-    public static final String SQL_USER = "root";
-    public static final String SQL_PASSWORD = "A15604559612";
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
     public static final long SIZE_LIMIT = 1024 * 1024 * 12;
     public static final long SIZE_MIN_LIMIT = 1024;
+    private static String host;
+    private static String user;
+    private static String password;
 
     static {
-
         try {
             Class.forName(SQL_DRIVER);
-        } catch (ClassNotFoundException e) {
+            JSONParser parser = new JSONParser(new FileInputStream("src/cn/dave12138/text/database.json"));
+            LinkedHashMap<String, Object> map = parser.parseObject();
+            host = (String) map.get("SQL_HOST");
+            user = (String) map.get("SQL_USER");
+            password = (String) map.get("SQL_PASSWORD");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -31,7 +39,7 @@ public class DatabaseConnection {
     }
 
     public DatabaseConnection(long sizeLimit) throws SQLException {
-        connection = DriverManager.getConnection(SQL_HOST, SQL_USER, SQL_PASSWORD);
+        connection = DriverManager.getConnection(host, user, password);
         this.sizeLimit = sizeLimit < SIZE_LIMIT && sizeLimit > SIZE_MIN_LIMIT ? sizeLimit : SIZE_LIMIT;
     }
 

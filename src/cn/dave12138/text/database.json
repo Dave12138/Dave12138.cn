@@ -1,0 +1,5 @@
+{
+  "SQL_HOST": "jdbc:mysql://192.168.108.128:3306/MyWeb?useSSL=false",
+  "SQL_USER": "root",
+  "SQL_PASSWORD": "A15604559612"
+}
