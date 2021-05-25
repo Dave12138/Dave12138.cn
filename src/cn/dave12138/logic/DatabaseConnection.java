@@ -1,8 +1,9 @@
 package cn.dave12138.logic;
 
 import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
 
-import java.io.FileInputStream;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -21,11 +22,9 @@ public class DatabaseConnection {
     static {
         try {
             Class.forName(SQL_DRIVER);
-            JSONParser parser = new JSONParser(new FileInputStream("src/cn/dave12138/text/database.json"));
-            LinkedHashMap<String, Object> map = parser.parseObject();
-            host = (String) map.get("SQL_HOST");
-            user = (String) map.get("SQL_USER");
-            password = (String) map.get("SQL_PASSWORD");
+            host = null;
+            user = null;
+            password = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,13 +34,32 @@ public class DatabaseConnection {
     private Connection connection;
 
     public DatabaseConnection() throws SQLException {
-        this(SIZE_LIMIT);
+        this(null);
     }
 
-    public DatabaseConnection(long sizeLimit) throws SQLException {
+    public DatabaseConnection(ServletContext con) throws SQLException {
+        this(SIZE_LIMIT, con);
+    }
+
+    public DatabaseConnection(long sizeLimit, ServletContext con) throws SQLException {
+
+        if (host == null) {
+
+            JSONParser parser = new JSONParser(con.getResourceAsStream("/json/database.json"));
+            LinkedHashMap<String, Object> map = null;
+            try {
+                map = parser.parseObject();
+            } catch (ParseException e) {
+                throw new SQLException("数据库连接信息配置文件缺失");
+            }
+            host = (String) map.get("SQL_HOST");
+            user = (String) map.get("SQL_USER");
+            password = (String) map.get("SQL_PASSWORD");
+        }
         connection = DriverManager.getConnection(host, user, password);
         this.sizeLimit = sizeLimit < SIZE_LIMIT && sizeLimit > SIZE_MIN_LIMIT ? sizeLimit : SIZE_LIMIT;
     }
+
 
     private static String getFixedName(String fileName) {
         fileName = fileName.replace('\'', '‘').replace('/', '、').replace(';', '；');

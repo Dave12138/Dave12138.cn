@@ -33,7 +33,7 @@ public class FileServlet extends DesignedServlet {
             setContentType(req, resp, file);
             String fileName = file.substring(file.lastIndexOf('/') + 1);
             if (req.getParameterMap().containsKey("delete")) {
-                DatabaseConnection db = new DatabaseConnection();
+                DatabaseConnection db = new DatabaseConnection(getServletContext());
                 db.removeFile(fileName);
                 return;
             }
@@ -48,7 +48,7 @@ public class FileServlet extends DesignedServlet {
                 fis.close();
             } else {
 
-                DatabaseConnection db = new DatabaseConnection();
+                DatabaseConnection db = new DatabaseConnection(getServletContext());
                 byte[][] bytes = db.getFile(fileName);
 
                 for (byte[] bys : bytes) {
