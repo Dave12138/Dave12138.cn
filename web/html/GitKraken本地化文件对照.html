@@ -41,30 +41,30 @@
     </p>
     <p>从<a href="Hello.html">欢迎页</a>上传文件 </p>
     <div id="result">
-        <div id="en" class="sp">
+        <div class="sp" id="en">
             <div class="title">
                 英文&emsp;共 {{menuStringsEN.length}} 个
             </div>
             <ul>
-                <li v-for="(item, index) in menuStringsEN" :key="index">{{index+1}}：{{item.key}}</li>
+                <li :key="index" v-for="(item, index) in menuStringsEN">{{index+1}}：{{item.key}}</li>
             </ul>
         </div>
 
-        <div id="zh" class="sp">
+        <div class="sp" id="zh">
             <div class="title">
                 中文&emsp;共 {{menuStringsZH.length}} 个
             </div>
             <ul>
-                <li v-for="(item, index) in menuStringsZH" :key="index">{{index+1}}：{{item.key}}</li>
+                <li :key="index" v-for="(item, index) in menuStringsZH">{{index+1}}：{{item.key}}</li>
             </ul>
         </div>
 
-        <div id="cy" class="sp">
+        <div class="sp" id="cy">
             <div class="title">
                 中文没有的&emsp;共 {{menuStringsCY.length}} 个
             </div>
             <ul>
-                <li v-for="(item, index) in menuStringsCY" :key="index">{{index+1}}：{{item.key}}</li>
+                <li :key="index" v-for="(item, index) in menuStringsCY">{{index+1}}：{{item.key}}</li>
             </ul>
         </div>
     </div>

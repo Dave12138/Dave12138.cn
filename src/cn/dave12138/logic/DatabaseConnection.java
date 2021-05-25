@@ -118,13 +118,13 @@ public class DatabaseConnection {
         return bytes.toArray(new byte[0][]);
     }
 
-    public boolean removeFile(String fileName) throws SQLException {
+    public int removeFile(String fileName) throws SQLException {
         fileName = getFixedName(fileName);
         PreparedStatement statement = connection.prepareStatement("update files set removed = 1 , `name` = concat('(removed)',`name`)  where `name` like ?");
         statement.setString(1, fileName + ".part%");
         int res = statement.executeUpdate();
         statement.close();
-        return res > 0;
+        return res;
     }
 
     public String[] images(int page, int count) throws SQLException {
