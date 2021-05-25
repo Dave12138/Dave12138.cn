@@ -52,9 +52,7 @@ public class UploadServlet extends DesignedServlet {
 
         } catch (Exception ex) {
             resp.sendRedirect("/html/Hello.html?failUploaded=" + URLEncoder.encode(file, StandardCharsets.UTF_8));
-
+//            ex.printStackTrace();
         }
     }
-
-
 }
