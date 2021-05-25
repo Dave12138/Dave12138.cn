@@ -7,6 +7,7 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
 
@@ -18,6 +19,7 @@ public class DatabaseConnection {
     private static String host;
     private static String user;
     private static String password;
+    private static Map<String, String> fileTypeMap;
 
     static {
         try {
@@ -25,6 +27,11 @@ public class DatabaseConnection {
             host = null;
             user = null;
             password = null;
+            fileTypeMap = new Hashtable<>();
+            final String[] images = {".jpg", ".gif", ".jpeg", ".svg", ".png", ".jfif"};
+            for (String s : images) {
+                fileTypeMap.put(s, "image");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,14 +94,17 @@ public class DatabaseConnection {
 
     public void saveBinFilePart(String fileName, InputStream in, int partNo) throws SQLException, IOException {
         fileName = getFixedName(fileName);
+        String ftp = identifyFileType(fileName);
         Statement statement = connection.createStatement();
         ResultSet pr = statement.executeQuery(String.format("select part from files where name like '%1$s.part%%'", fileName));
         while (pr.next()) {
             if (pr.getInt("part") == partNo) throw new SQLException("该文件名存在");
         }
         statement.close();
-        String cmd = "insert into files (name, data, part) value (?, ? ,?)";
+        String cmd = "insert into files (name, data, part, fileType) value (?, ? ,? , ?)";
         PreparedStatement ps = connection.prepareStatement(cmd);
+
+        ps.setString(4, ftp);
         while (in.available() > 0) {
             ps.setString(1, fileName + ".part" + partNo);
             ps.setBlob(2, in, sizeLimit);
@@ -146,18 +156,26 @@ public class DatabaseConnection {
 
     public String[] images(int page, int count) throws SQLException {
 
-        Statement statement = connection.createStatement();
-        ResultSet res = statement.executeQuery(String.format("select `name` from files where removed = 0 and (`name` like '%%.jpg.part0' or `name` like '%%.gif.part0' or `name` like '%%.jpeg.part0' or `name` like '%%.svg.part0' or `name` like '%%.png.part0' or `name` like '%%.jfif.part0') limit %d offset %d", count, page * count));
+        PreparedStatement stm = connection.prepareStatement("select `name` from files where removed = 0 and `name` like '%%.part0' and fileType = 'image'  limit ? offset ?");
+        stm.setInt(1, count);
+        stm.setInt(2, page * count);
+        ResultSet res = stm.executeQuery();
         Vector<String> list = new Vector<>();
         while (res.next()) {
             String name = res.getString("name").replace(".part0", "");
             list.add(name);
         }
-        statement.close();
+        stm.close();
         return list.toArray(new String[0]);
     }
 
     public long getSizeLimit() {
         return sizeLimit;
+    }
+
+    public String identifyFileType(String fileName) {
+        String end = fileName.replaceAll(".*\\.", ".");
+        if (!fileTypeMap.containsKey(end)) fileTypeMap.put(end, "file");
+        return fileTypeMap.get(end);
     }
 }
