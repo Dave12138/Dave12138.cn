@@ -6,6 +6,9 @@
     <style type="text/css">
         .center {
             text-align: center;
+            position: relative;
+            margin-top: 40px;
+            padding: 20px 0;
         }
 
         .base {
@@ -17,28 +20,13 @@
         }
 
         .active-center {
+            border: 2px solid;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
-        .link {
-            border: #EEEEEE 2px solid;
-            padding: 2px;
-            text-underline: none;
-            background-color: lightgrey;
-        }
-
-        .active-center {
-            border: 2px solid;
-        }
-
-        .center {
-            position: relative;
-            margin-top: 40px;
-            padding: 20px 0;
-        }
     </style>
 </head>
 <body>
@@ -80,12 +68,15 @@
     (function () {
         let expr = /[cC]ommunism/;
         if (expr.test(document.cookie) || expr.test(window.location.search) || new Date().toLocaleDateString().endsWith("7/1")) {
-            hello.innerHTML = "<a style='font-size: medium;'>“如果我们选择了最能为人类福利而劳动的职业，”" +
-                "“那么，重担就不能把我们压倒，因为这是为大家而献身；”<br/>" +
-                "“那时我们所感到的就不是可怜的、有限的、自私的乐趣,”" +
-                "“我们的幸福将属于千百万人，”" +
-                "</a> <br />" +
-                "<img src='images/Danghui.svg'/><br /> 我们的事业将默默地，但永恒发挥作用地存在下去<br />而面对我们的骨灰，高尚的人们将洒下热泪。<br /><i style='font-size: medium;color: gray; text-align: right'>——卡尔·马克思</i>";
+            let strs = [
+                "“如果我们选择了最能为人类福利而劳动的职业，”“那么，重担就不能把我们压倒，因为这是为大家而献身；”",
+                "“那时我们所感到的就不是可怜的、有限的、自私的乐趣,”“我们的幸福将属于千百万人，”",
+                "<img src='images/Danghui.svg' alt=\"党徽\"/>",
+                "我们的事业将默默地，但永恒发挥作用地存在下去",
+                "而面对我们的骨灰，高尚的人们将洒下热泪。",
+                "<i style='font-size: medium;color: gray; text-align: right'>——卡尔·马克思</i>"
+            ];
+            hello.innerHTML = `<a style='font-size: medium;'>${strs[0]}<br/>${strs[1]}</a> <br />${strs[2]}<br />${strs[3]}<br />${strs[4]}<br />${strs[5]}`;
             setTimeout(function () {
                 if (!expr.test(document.cookie)) {
                     setTimeout(function () {
@@ -101,9 +92,7 @@
     (function () {
         let expr = /anti[-_]?entropy/;
         if (expr.test(document.cookie) || expr.test(window.location.search) || new Date().toLocaleDateString().endsWith("7/1")) {
-            hello.innerHTML = "<a style='font-size: medium;'>人类有人类的底蕴" +
-                "</a> <br />" +
-                "<img src='images/Anti-Entropy.svg' style='width: 500px;'/><br /> 向一切虚伪的美好宣战";
+            hello.innerHTML = `<a style='font-size: medium;'>人类有人类的底蕴</a> <br /><img src='images/Anti-Entropy.svg' style='width: 500px;' alt="逆熵"/><br /> 向一切虚伪的美好宣战`;
             setTimeout(function () {
                 if (!expr.test(document.cookie)) {
                     setTimeout(function () {
