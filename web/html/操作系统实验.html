@@ -569,6 +569,9 @@
             switchInPage(page);
             CPU.pageLostTimes++;
             page.accessMark = new Date().getTime();
+            if (CPU.isShaking()) {
+                CPU.activePageLimit++;
+            }
         }
         if (switchPlan === 1) {
             page.accessMark = new Date().getTime();
