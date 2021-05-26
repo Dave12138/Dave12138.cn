@@ -227,7 +227,7 @@
             let cube;
             if (c.getMonth() === mon) cube = "cube";
             else cube = "gray-cube";
-            let tmp = `<td style='text-align: center'><div class='${cube}'><a class='cube-text' href='javascript:;' onclick='yesterday("${c.toLocaleDateString()}")' >${c.getDate()}</a></div></td>`
+            let tmp = `<td style='text-align: center'><div class='${cube}'><a class='cube-text' href='javascript:;' onclick='document.getElementById("ans-box").innerText = yesterday("${c.toLocaleDateString()}")' >${c.getDate()}</a></div></td>`
             if (c.getDay() === 1) tmp = "<tr style='text-align: center'>" + tmp;
             if (c.getDay() === 0) tmp = tmp + "</tr>";
 
@@ -248,9 +248,16 @@
         }
         let date2 = new Date();
         date2.setFullYear(RegExp.$1 | 0, RegExp.$2 - 1, RegExp.$3 | 0);
-        date2.setDate(date2.getDate() - 1);
-        document.getElementById("ans-box").innerText = date + "前一天为" + date2.toLocaleDateString();
-        return document.getElementById("ans-box").innerText;
+        let txt = "";
+        if (date2.getMonth() === RegExp.$2 - 1) {
+
+            date2.setDate(date2.getDate() - 1);
+            txt = date + "前一天为" + date2.toLocaleDateString();
+        } else {
+            txt = date + "不存在";
+
+        }
+        return txt;
     }
 
     let hi2rtn = document.getElementById("hi2Info");
