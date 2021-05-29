@@ -28,13 +28,39 @@
 
 
         .cube {
+            background-color: #ff66cc;
+        }
+
+        .cube, .gray-cube {
+
             height: 100%;
             width: 100%;
-            background-color: #ff66cc;
             text-align: center;
             border: 2px #FFFFFF;
             position: relative;
             border-radius: 10px;
+            color: #FFFFFF;
+            font-size: 130%;
+        }
+
+        .gray-cube {
+            background-color: #85a0ff;
+        }
+
+        .cube:hover {
+            background-color: #CCCCCC;
+        }
+
+        .gray-cube:hover {
+            background-color: #CCCCCC;
+        }
+
+        .cube:active {
+            background-color: #85a0ff;
+        }
+
+        .gray-cube:active {
+            background-color: #ff66cc;
         }
 
         .sub-title {
@@ -43,16 +69,6 @@
             width: 100%;
             min-width: 8vh;
             background-color: #000000;
-            text-align: center;
-            border: 2px #FFFFFF;
-            position: relative;
-            border-radius: 10px;
-        }
-
-        .gray-cube {
-            height: 100%;
-            width: 100%;
-            background-color: #85a0ff;
             text-align: center;
             border: 2px #FFFFFF;
             position: relative;
@@ -212,6 +228,10 @@
         let year = parseInt(document.getElementById("u4_input").value);
         let mon = parseInt(document.getElementById("u0_input").value) - 1;
         let c = new Date();
+        if (year < 1) {
+            year = 1;
+            document.getElementById("u4_input").value = year;
+        }
         c.setFullYear(year, mon, 1);
         //alert(c.toLocaleDateString());
         let g = document.getElementById("u3_div");
@@ -227,7 +247,7 @@
             let cube;
             if (c.getMonth() === mon) cube = "cube";
             else cube = "gray-cube";
-            let tmp = `<td style='text-align: center'><div class='${cube}'><a class='cube-text' href='javascript:;' onclick='document.getElementById("ans-box").innerText = yesterday("${c.toLocaleDateString()}")' >${c.getDate()}</a></div></td>`
+            let tmp = `<td style='text-align: center'><button class='${cube}' onclick='document.getElementById("ans-box").innerText = yesterday("${c.toLocaleDateString()}")' >${c.getDate()}</button></td>`
             if (c.getDay() === 1) tmp = "<tr style='text-align: center'>" + tmp;
             if (c.getDay() === 0) tmp = tmp + "</tr>";
 
@@ -246,16 +266,18 @@
             document.getElementById("ans-box").innerText = "输入不符合规范";
             return document.getElementById("ans-box").innerText;
         }
+        let y = RegExp.$1 | 0;
+        let m = RegExp.$2 - 1;
+        let d = RegExp.$3 | 0;
+        if (date === "1/1/1") return date + "是格里历公元元年第一天";
         let date2 = new Date();
-        date2.setFullYear(RegExp.$1 | 0, RegExp.$2 - 1, RegExp.$3 | 0);
+        date2.setFullYear(y, m, d);
         let txt = "";
-        if (date2.getMonth() === RegExp.$2 - 1) {
-
+        if (date2.getMonth() === m && y > 0) {
             date2.setDate(date2.getDate() - 1);
             txt = date + "前一天为" + date2.toLocaleDateString();
         } else {
             txt = date + "不存在";
-
         }
         return txt;
     }
