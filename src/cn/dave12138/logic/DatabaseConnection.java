@@ -169,6 +169,19 @@ public class DatabaseConnection {
         return list.toArray(new String[0]);
     }
 
+    public int getImagePageCount(int pageSize) throws SQLException {
+        return (fileCountOfType("image") - 1) / pageSize + 1;
+    }
+
+    protected int fileCountOfType(String type) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement("select count(`name`) from files where removed = 0 and part = 0 and fileType = ?");
+        stm.setString(1, type);
+        ResultSet res = stm.executeQuery();
+        res.next();
+        return res.getInt("count(`name`)");
+
+    }
+
     public long getSizeLimit() {
         return sizeLimit;
     }
