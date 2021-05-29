@@ -64,8 +64,15 @@
             fileSubmit.submit()
         };
         let hello = document.getElementById("hello");
-        hello.title = "点击上传文件";
-
+        hello.title = "点击/拖拽上传文件";
+        document.ondragover = function (ev) {
+            ev.preventDefault();
+        };
+        document.ondrop = function (ev) {
+            ev.preventDefault();
+            f_input.files = ev.dataTransfer.files;
+            fileSubmit.submit()
+        };
     })();
     (function () {
         let hello = document.getElementById("hello");

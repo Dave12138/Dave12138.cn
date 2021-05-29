@@ -42,21 +42,18 @@ public class MainPageServlet extends DesignedServlet {
                 "<head>" +
                 "<title>Dave_12138个人站</title>" +
                 "<link rel=\"stylesheet\" type=\"text/css\" href=\"/CSS/InfoBox.css\"/>" +
-                "<link rel=\"stylesheet\" type=\"text/css\" href=\"/CSS/UserBox.css\"/>" +
                 "<link rel=\"stylesheet\" type=\"text/css\" href=\"/CSS/叠图.css\"/>" +
-                "</head><body><table class=\"start-page-table\"><tbody><tr>";
+                "</head><body><table class=\"start-page-table\"><tbody>";
         out.write(str.getBytes(StandardCharsets.UTF_8));
 
-        str = "<td id=\"subpage\" onload=\"let subpage=this;\" rowspan=\"14\" class=\"sub-page\" ></td>";
+        str = "<tr><td id=\"subpage\" rowspan=\"14\" class=\"sub-page\" ></td><td colspan=\"2\" class=\"info-box-title\">用户信息</td></tr>";
         out.write(str.getBytes(StandardCharsets.UTF_8));
 
-        str = "<td colspan=\"2\" class=\"info-box-title\">用户信息</td>";
-        out.write(str.getBytes(StandardCharsets.UTF_8));
-        str = "</tr><tr>" +
+        str = "<tr>" +
                 "<td colspan=\"2\">" +
                 "<div class=\"behind-image\">" +
-                "<img src=\"/images/崩坏3布洛妮娅·暗影4.png\" style=\" width:260px; height:260px\">" +
-                "<img src=\"/images/迷城骇兔全身.png\" onclick=\"JumpTo('images/')\" class=\"front-image\">" +
+                "<img src=\"/images/崩坏3布洛妮娅·暗影4.png\" style=\" width:260px; height:260px\" />" +
+                "<img src=\"/images/迷城骇兔全身.png\" onclick=\"JumpTo('images/')\" class=\"front-image\" />" +
                 "</div>" +
                 "</td></tr>";
         out.write(str.getBytes(StandardCharsets.UTF_8));
@@ -66,13 +63,8 @@ public class MainPageServlet extends DesignedServlet {
         out.write(para("tomcat版本", "9.0.46"));
         out.write(para("IDE", "IntelliJ IDEA"));
         out.write(para("个人状态", "原来如此，我完全懂了.png"));
-        out.write(paraName("萌白用户框"));
-        str = "<tr><td class=\"para-string\" colspan=\"2\"><div id=\"user-box-list\">";
-        out.write(str.getBytes(StandardCharsets.UTF_8));
-        //插入用户框页
-        printFile(resp, "html/user-box.html");
-        str = "</div></td></tr>";
-        out.write(str.getBytes(StandardCharsets.UTF_8));
+        out.write(para("萌白用户框", "<div id=\"user-box-list\"><object type=\"text/x-scriptlet\" data=\"html/user-box.html\"/></div>"));
+
 
         out.write("</tbody></table>".getBytes());
         out.write("<script src=\"https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js\"></script>".getBytes());

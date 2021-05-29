@@ -39,6 +39,10 @@
     background-color: #FFF;
 }
 
+.info-box-title:active {
+    background-color: #77CCDD;
+}
+
 .info-box-title {
     background-color: #99CCFF;
     color: #000000;
@@ -58,13 +62,10 @@
 
 #user-box-list {
     width: 100%;
-    overflow: auto;
-    height: 30vh;
 }
 
-.user-box {
-    width: 260px;
-    min-height: 59px;
-    margin: 0;
-    background: #ffffff;
+#user-box-list object {
+    overflow: auto;
+    height: 28vh;
 }
+

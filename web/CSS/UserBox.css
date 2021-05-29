@@ -40,3 +40,26 @@
     border: 1px solid #cbffff;
     margin: 1px;
 }
+
+.ub4 {
+    width: 45px;
+    height: 57px;
+    background: #CCFF00;
+    text-align: center;
+    font-size: 16pt;
+    line-height: 1em;
+    color: black;
+}
+
+.user-box {
+    width: 260px;
+    min-height: 59px;
+    margin: 0;
+    background: #ffffff;
+}
+
+.box-out1 {
+    float: left;
+    border: 1px solid #ff00ff;
+    margin: 1px;
+}
