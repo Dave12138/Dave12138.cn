@@ -32,11 +32,6 @@ public class FileServlet extends DesignedServlet {
         try {
             setContentType(req, resp, file);
             String fileName = file.substring(file.lastIndexOf('/') + 1);
-            if (req.getParameterMap().containsKey("delete")) {
-                DatabaseConnection db = new DatabaseConnection(getServletContext());
-                db.removeFile(fileName);
-                return;
-            }
 
             InputStream fis = getServletContext().getResourceAsStream(file);
             if (fis != null) {
@@ -49,18 +44,26 @@ public class FileServlet extends DesignedServlet {
             } else {
 
                 DatabaseConnection db = new DatabaseConnection(getServletContext());
-                byte[][] bytes = db.getFile(fileName);
+                try {
 
-                for (byte[] bys : bytes) {
-                    out.write(bys);
-                }
-                db.close();
+                    if (req.getParameterMap().containsKey("delete")) {
+                        db.removeFile(fileName);
 
-                if (bytes.length < 1) {
-                    log("找不到" + file);
-                    toRoot(resp);
-                    return;
+                    } else {
+                        byte[][] bytes = db.getFile(fileName);
+                        if (bytes.length < 1) {
+                            log("找不到" + file);
+                            toRoot(resp);
+                            return;
+                        }
+                        for (byte[] bys : bytes) {
+                            out.write(bys);
+                        }
+                    }
+                } finally {
+                    db.close();
                 }
+
             }
 
         } catch (Exception e) {

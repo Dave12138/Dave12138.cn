@@ -74,8 +74,6 @@ public class MainPageServlet extends DesignedServlet {
         str = "</div></td></tr>";
         out.write(str.getBytes(StandardCharsets.UTF_8));
 
-
-//        printFile(resp, "html/InfoBox.html");
         out.write("</tbody></table>".getBytes());
         out.write("<script src=\"https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js\"></script>".getBytes());
         out.write("<script src=\"/JavaScript/MainPage.js\"></script>".getBytes());

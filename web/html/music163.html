@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>网易云外链表单</title>
+    <style>
+        label img {
+            width: 75px;
+        }
+    </style>
 </head>
 <body>
 <form action="//music.163.com/outchain/player" enctype="multipart/form-data" method="get">
@@ -17,8 +22,8 @@
            onchange="document.cookie=`music_id=${this.value};path=/html`"
            onload="let music_id=this" type="text"
            value="91843186"/>
-
-    <input type="submit"/>
+    <label for="subBut"><img alt="music163" src="/images/music163.svg"/></label>
+    <input id="subBut" style="display: none" type="submit"/>
 </form>
 <script>
     (function () {
