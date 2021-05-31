@@ -59,7 +59,7 @@ function dateExist(y, m, d) {
     const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     if (y > 0 && m >= 0 && d > 0) {
         if (y % 400 === 0 || (y % 4 === 0 && y % 100 !== 0)) dom[1]++;
-        if (dom[m | 0] > d) return true;
+        if (dom[m | 0] >= d) return true;
     }
     return false;
 
