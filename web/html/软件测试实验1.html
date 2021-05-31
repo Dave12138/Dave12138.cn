@@ -23,6 +23,7 @@
 
         #u3_div {
             height: 42vh;
+            min-width: 100%;
             width: 40vh;
         }
 
@@ -98,6 +99,10 @@
 
         .phone_illegal {
             background-color: rgba(255, 0, 0, 0.4);
+        }
+
+        #rmbOutput {
+            min-width: 200px;
         }
 
         .hidden {
@@ -200,20 +205,22 @@
         </tr>
         <tr class="hi3">
 
-            <td colspan="2">
-                <label for="rmbInput">rmb输入</label>
-
-            </td>
-            <td colspan="2">
-                <label for="rmbOutput">rmb大写输出</label>
-            </td>
         </tr>
         <tr class="hi3">
 
-            <td colspan="2">
+            <td>
+                <label for="rmbInput">rmb输入</label>
+
+            </td>
+            <td colspan="3">
                 <input id="rmbInput" type="text"/>
             </td>
-            <td colspan="2">
+        </tr>
+        <tr class="hi3">
+            <td>
+                <label for="rmbOutput">rmb大写输出</label>
+            </td>
+            <td colspan="3">
                 <input id="rmbOutput" type="text"/>
             </td>
         </tr>

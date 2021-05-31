@@ -44,15 +44,25 @@ function yesterday(date) {
     let m = RegExp.$2 - 1;
     let d = RegExp.$3 | 0;
     if (date === "1/1/1") return date + "是格里历公元元年第一天";
-    let date2 = new Date();
-    date2.setFullYear(y, m, d);
-    if (date2.getMonth() === m && y > 0) {
+    if (dateExist(y, m, d)) {
+        let date2 = new Date();
+        date2.setFullYear(y, m, d);
         date2.setDate(date2.getDate() - 1);
         txt = date + "前一天为" + date2.toLocaleDateString();
     } else {
         txt = date + "不存在";
     }
     return txt;
+}
+
+function dateExist(y, m, d) {
+    const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (y > 0 && m >= 0 && d > 0) {
+        if (y % 400 === 0 || (y % 4 === 0 && y % 100 !== 0)) dom[1]++;
+        if (dom[m | 0] > d) return true;
+    }
+    return false;
+
 }
 
 
