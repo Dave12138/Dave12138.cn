@@ -26,13 +26,12 @@
             width: 40vh;
         }
 
-
         .cube {
             background-color: #ff66cc;
         }
 
-        .cube, .gray-cube {
-
+        .cube,
+        .gray-cube {
             height: 100%;
             width: 100%;
             text-align: center;
@@ -67,7 +66,7 @@
             height: 0;
             padding-bottom: 15%;
             width: 100%;
-            min-width: 8vh;
+            min-width: 150px;
             background-color: #000000;
             text-align: center;
             border: 2px #FFFFFF;
@@ -75,7 +74,7 @@
             border-radius: 10px;
         }
 
-        .cube-text {
+        .title-text {
             color: #FFFFFF;
             position: absolute;
             top: 50%;
@@ -92,25 +91,22 @@
             border-radius: 6px;
         }
 
-        #phone_input {
-            width: 100%;
-        }
 
         .phone_legal {
             background-color: #CCFF00;
         }
 
         .phone_illegal {
-            background-color: red;
+            background-color: rgba(255, 0, 0, 0.4);
         }
 
         .hidden {
             display: none;
         }
-
     </style>
 
 </head>
+
 <body>
 <div id="base">
     <table class="super-table">
@@ -118,7 +114,7 @@
         <tr>
             <td colspan="4" onclick="hideControl('hi1')">
                 <div class="sub-title">
-                    <a class="cube-text">程序1</a>
+                    <a class="title-text">程序1</a>
                 </div>
             </td>
         </tr>
@@ -126,7 +122,7 @@
             <!-- 年份 (文本框) -->
             <td id="u4">
                 <div class="" id="u4_div"></div>
-                <input class="u4_input" id="u4_input" onchange="updateCalendar()" type="text" value="2021"/>
+                <input class="u4_input" id="u4_input" type="text" value="2021"/>
             </td>
             <!-- 年 (文本标签) -->
             <td id="u1">
@@ -166,6 +162,11 @@
             </td>
         </tr>
         <tr class="hi1">
+            <td colspan="4" id="dateInput">
+
+            </td>
+        </tr>
+        <tr class="hi1">
             <td colspan="4" id="ans-box">
 
             </td>
@@ -173,16 +174,14 @@
         <tr>
             <td colspan="4" onclick="hideControl('hi2')">
                 <div class="sub-title">
-                    <a class="cube-text">程序2</a>
+                    <a class="title-text">程序2</a>
                 </div>
             </td>
         </tr>
         <tr class="hi2">
             <td colspan="4">
-                <label for="phone_input">输入号码</label><input id="phone_input"
-                                                            onchange="checkPhone()"
-                                                            onclick="(function (s) {s.className='';})(this);"
-                                                            type="text"/>
+                <label for="phone_input">输入号码</label>
+                <input id="phone_input" type="text"/>
             </td>
         </tr>
         <tr class="hi2">
@@ -195,7 +194,7 @@
         <tr>
             <td colspan="4" onclick="hideControl('hi3')">
                 <div class="sub-title">
-                    <a class="cube-text">程序3</a>
+                    <a class="title-text">程序3</a>
                 </div>
             </td>
         </tr>
@@ -212,9 +211,7 @@
         <tr class="hi3">
 
             <td colspan="2">
-                <input id="rmbInput"
-                       onchange="(function (s) {document.getElementById('rmbOutput').value= rmbToCh(s);})(this.value);"
-                       type="text"/>
+                <input id="rmbInput" type="text"/>
             </td>
             <td colspan="2">
                 <input id="rmbOutput" type="text"/>
@@ -223,128 +220,9 @@
         </tbody>
     </table>
 </div>
-<script>
-    function updateCalendar() {
-        let year = parseInt(document.getElementById("u4_input").value);
-        let mon = parseInt(document.getElementById("u0_input").value) - 1;
-        let c = new Date();
-        if (year < 1) {
-            year = 1;
-            document.getElementById("u4_input").value = year;
-        }
-        c.setFullYear(year, mon, 1);
-        //alert(c.toLocaleDateString());
-        let g = document.getElementById("u3_div");
-        let str = "";
-        while (c.getDay() !== 1) {
-            c.setDate(c.getDate() - 1);
-        }
-        let preMon = c.getMonth();
-        //alert(c.toLocaleDateString());
-        let flag0 = true;
-        let flag1 = true;
-        while (flag0 || flag1 || c.getDay() !== 1) {
-            let cube;
-            if (c.getMonth() === mon) cube = "cube";
-            else cube = "gray-cube";
-            let tmp = `<td style='text-align: center'><button class='${cube}' onclick='document.getElementById("ans-box").innerText = yesterday("${c.toLocaleDateString()}")' >${c.getDate()}</button></td>`
-            if (c.getDay() === 1) tmp = "<tr style='text-align: center'>" + tmp;
-            if (c.getDay() === 0) tmp = tmp + "</tr>";
-
-            c.setDate(c.getDate() + 1);
-            if (c.getMonth() !== preMon) flag0 = false;
-            if (!flag0 && c.getMonth() !== mon) flag1 = false;
-            str += tmp;
-        }
-        g.innerHTML = "<table style='text-align: center;height: 100%;width: 100%;'><thead><tr><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr></thead><tbody>" + str + "</tbody></table>"
-    }
-
-    updateCalendar();
-
-    function yesterday(date) {
-        if (!/^(\d+)\/(\d{1,2})\/(\d{1,2})$/.test(date)) {
-            document.getElementById("ans-box").innerText = "输入不符合规范";
-            return document.getElementById("ans-box").innerText;
-        }
-        let y = RegExp.$1 | 0;
-        let m = RegExp.$2 - 1;
-        let d = RegExp.$3 | 0;
-        if (date === "1/1/1") return date + "是格里历公元元年第一天";
-        let date2 = new Date();
-        date2.setFullYear(y, m, d);
-        let txt = "";
-        if (date2.getMonth() === m && y > 0) {
-            date2.setDate(date2.getDate() - 1);
-            txt = date + "前一天为" + date2.toLocaleDateString();
-        } else {
-            txt = date + "不存在";
-        }
-        return txt;
-    }
-
-    let hi2rtn = document.getElementById("hi2Info");
-
-    function checkPhone() {
-        let e = document.getElementById('phone_input');
-        hi2rtn.innerText = "";
-        let t = e.value;
-        let res = true;
-        if (!(t.length === 7 || t.length === 10)) {
-            hi2rtn.innerText = "长度不正确";
-            res = false;
-        } else if (!isDigit(t)) {
-            hi2rtn.innerText = "并非由数字组成";
-            res = false;
-        } else if (/[01]/.test(t.substr(-7, 1))) {
-            hi2rtn.innerText = "前缀码以0或1开头";
-            res = false;
-        }
-        if (res) {
-            e.className = 'phone_legal';
-        } else {
-            e.className = 'phone_illegal';
-        }
-    }
 
 
-    function isDigit(value) {
-        const patten = /^[0-9]*$/;
-        return !(patten.exec(value) == null || value == "");
-    }
-
-    function rmbToCh(s) {
-        let l = s + "";
-        l = l.trim();
-        if (!/^￥?\d{1,12}(\.\d{1,2})?$/.test(l)) {
-            return "Error:输入不符合格式";
-        }
-        if (/\./.test(l)) {
-            l = l.replace(/\./g, "元");
-        } else {
-            l = l + "元";
-        }
-        l = l.replace(/(\d)(\d{4}元)/, "$1万$2");
-        l = l.replace(/(\d)(\d{4}万)/, "$1亿$2");
-        l = l.replace(/(\d)(\d[万亿元])/g, "$1拾$2");
-        l = l.replace(/(\d)(\d[拾])/g, "$1佰$2");
-        l = l.replace(/(\d)(\d[佰])/g, "$1仟$2");
-        l = l.replace(/(元\d)/, "$1角");
-        l = l.replace(/(角\d)/, "$1分");
-        l = l.replace(/0[拾佰仟角分]/g, "0");
-        l = l.replace(/0+/g, "0");
-        l = l.replace(/0$/g, "");
-        l = l.replace(/0([万元])/g, "$1");
-        l = l.replace(/([\d])/g, function (s) {
-            let f = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
-            return f[s | 0];
-        });
-        l = l.replace(/^(.?)壹拾/, "$1拾");
-        l = l.replace(/元$/, "元整");
-        l = l.replace(/^￥/, "人民币");
-        return l;
-    }
-</script>
-
+<script src="/JavaScript/SoftwareTestProject.js"></script>
 <script src="/JavaScript/HiddenControl.js"></script>
 </body>
 
