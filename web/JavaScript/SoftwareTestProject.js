@@ -34,9 +34,8 @@ function updateCalendar() {
 }
 
 function yesterday(date) {
-    let txt = "";
     if (!/^(\d+)\/(\d{1,2})\/(\d{1,2})$/.test(date)) {
-        txt = "输入不符合规范";
+        let txt = "输入不符合规范";
         document.getElementById("ans-box").innerText = txt;
         return txt;
     }
@@ -44,24 +43,36 @@ function yesterday(date) {
     let m = RegExp.$2 - 1;
     let d = RegExp.$3 | 0;
     if (date === "1/1/1") return date + "是格里历公元元年第一天";
-    if (dateExist(y, m, d)) {
-        let date2 = new Date();
-        date2.setFullYear(y, m, d);
-        date2.setDate(date2.getDate() - 1);
-        txt = date + "前一天为" + date2.toLocaleDateString();
-    } else {
-        txt = date + "不存在";
+    if (!dateExist(y, m, d)) {
+        return `${date}不存在`;
     }
-    return txt;
+    const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (isLeap(y)) dom[1]++;
+    d--;
+    if (d < 1) {
+        m--;
+        if (m < 0) {
+            m = 11;
+            y--;
+        }
+        d = dom[m];
+    }
+    return `${date}前一天为${y}/${m + 1}/${d}`;
+
 }
 
 function dateExist(y, m, d) {
     const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     if (y > 0 && m >= 0 && d > 0) {
-        if (y % 400 === 0 || (y % 4 === 0 && y % 100 !== 0)) dom[1]++;
+        if (isLeap(y)) dom[1]++;
         if (dom[m | 0] >= d) return true;
     }
     return false;
+
+}
+
+function isLeap(year) {
+    return year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
 
 }
 
