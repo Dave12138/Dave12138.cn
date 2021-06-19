@@ -39,26 +39,28 @@ function yesterday(date) {
         document.getElementById("ans-box").innerText = txt;
         return txt;
     }
+    if (date === "1/1/1") return date + "是格里历公元元年第一天";
     let y = RegExp.$1 | 0;
     let m = RegExp.$2 - 1;
     let d = RegExp.$3 | 0;
-    if (date === "1/1/1") return date + "是格里历公元元年第一天";
-    if (!dateExist(y, m, d)) {
+
+    const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    if (isLeap(y)) dom[1]++;
+    if (y > 0 && m >= 0 && d > 0 && dom[m | 0] >= d) {
+        d--;
+        if (d < 1) {
+            m--;
+            if (m < 0) {
+                m = 11;
+                y--;
+            }
+            d = dom[m];
+        }
+        return `${date}前一天为${y}/${m + 1}/${d}`;
+    } else {
         return `${date}不存在`;
     }
-    const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    if (isLeap(y)) dom[1]++;
-    d--;
-    if (d < 1) {
-        m--;
-        if (m < 0) {
-            m = 11;
-            y--;
-        }
-        d = dom[m];
-    }
-    return `${date}前一天为${y}/${m + 1}/${d}`;
-
 }
 
 function dateExist(y, m, d) {
@@ -73,7 +75,6 @@ function dateExist(y, m, d) {
 
 function isLeap(year) {
     return year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
-
 }
 
 
@@ -132,7 +133,7 @@ function rmbToCh(s) {
     l = l.replace(/0+/g, "0");
     l = l.replace(/0$/g, "");
     l = l.replace(/0([万元])/g, "$1");
-    l = l.replace(/([\d])/g, function (s) {
+    l = l.replace(/([\d])/g, function(s) {
         let f = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
         return f[s | 0];
     });
@@ -145,7 +146,7 @@ function rmbToCh(s) {
 }
 
 //初始化
-(function () {
+(function() {
     //程序1 UI初始化
     updateCalendar();
     let u4_input = document.getElementById("u4_input");
@@ -153,23 +154,23 @@ function rmbToCh(s) {
     //程序2 初始化 按钮绑定
     let phone_input = document.getElementById("phone_input");
     phone_input.onchange = checkPhone;
-    phone_input.onkeydown = function (e) {
+    phone_input.onkeydown = function(e) {
         if (e.code === "Enter") {
             checkPhone();
         }
     };
-    phone_input.onclick = function () {
+    phone_input.onclick = function() {
         phone_input.className = '';
     };
 
     //程序3 初始化 按钮绑定
     let rmbInput = document.getElementById("rmbInput");
-    rmbInput.onkeydown = function (e) {
+    rmbInput.onkeydown = function(e) {
         if (e.code === "Enter") {
             document.getElementById('rmbOutput').value = rmbToCh(rmbInput.value);
         }
     };
-    rmbInput.onchange = function () {
+    rmbInput.onchange = function() {
         document.getElementById('rmbOutput').value = rmbToCh(rmbInput.value);
     };
 

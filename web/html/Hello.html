@@ -80,13 +80,14 @@
         if (expr.test(document.cookie) || expr.test(window.location.search) || new Date().toLocaleDateString().endsWith("7/1")) {
             let strs = [
                 "“如果我们选择了最能为人类福利而劳动的职业，”“那么，重担就不能把我们压倒，因为这是为大家而献身；”",
-                "“那时我们所感到的就不是可怜的、有限的、自私的乐趣,”“我们的幸福将属于千百万人，”",
-                "<img src='images/Danghui.svg' alt=\"党徽\"/>",
+                "“那时我们所感到的就不是可怜的、有限的、自私的乐趣,”“我们的幸福将属于千百万人，”"];
+            let strs2=[
+                "<img src='/images/Danghui.svg' alt=\"党徽\"/>",
                 "我们的事业将默默地，但永恒发挥作用地存在下去",
                 "而面对我们的骨灰，高尚的人们将洒下热泪。",
                 "<i style='font-size: medium;color: gray; text-align: right'>——卡尔·马克思</i>"
             ];
-            hello.innerHTML = `<a style='font-size: medium;'>${strs[0]}<br/>${strs[1]}</a> <br />${strs[2]}<br />${strs[3]}<br />${strs[4]}<br />${strs[5]}`;
+            hello.innerHTML = `<a style='font-size: medium;'>${strs.join("<br />")}</a> <br />${strs2.join("<br />")}`;
             setTimeout(function () {
                 if (!expr.test(document.cookie)) {
                     setTimeout(function () {
@@ -134,5 +135,6 @@
         mess.innerHTML = text;
     })();
 </script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 </html>

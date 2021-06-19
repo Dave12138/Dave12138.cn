@@ -77,8 +77,8 @@
             建议不要在百度浏览器或贴吧自带浏览器内使用此程序<br/>
             部分手机浏览器使用时可能会因为兼容性问题导致无法保存图片，建议换谷歌浏览器或者使用电脑<br/>
             <br/>
-            下载此网页，为我省点流量：<a download="wytk.html" id="bc">下载</a>&ensp;<a
-                href="https://github.com/wytk/wytk.github.io/archive/main.zip">下载2</a><br/>
+            下载此网页，为我省点流量：<a download="wytk.html" id="bc">下载</a>&ensp;
+            <a href="https://github.com/wytk/wytk.github.io/archive/main.zip">下载2</a><br/>
             下载之后是个html文件，(大概)可以用浏览器直接打开使用
         </div>
     </details>
@@ -387,7 +387,7 @@
             k = k + (imgdata.data[4 * i] + 256).toString(2).slice(-mode);
             k = k + (imgdata.data[4 * i + 1] + 256).toString(2).slice(-mode);
             k = k + (imgdata.data[4 * i + 2] + 256).toString(2).slice(-mode);
-            i++
+            i++;
             for (let ii = 0; ii < aa; ii++) {
                 if (k.length >= 8 && j < blength) {
                     blist[j] = parseInt(k.slice(0, 8), 2);
@@ -400,7 +400,7 @@
     }
 
     window.onload = function () {
-        let w = "<!DOCTYPE " + "html>" + document.documentElement.outerHTML;
+        let w = `<!DOCTYPE html>${document.documentElement.outerHTML}`;
         document.getElementById("bc").href = URL.createObjectURL(new Blob([w], {type: "text/html"}))
     }
 </script>
