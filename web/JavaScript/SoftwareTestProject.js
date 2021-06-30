@@ -44,7 +44,7 @@ function yesterday(date) {
     let m = RegExp.$2 - 1;
     let d = RegExp.$3 | 0;
 
-    const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    const dom = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
     if (isLeap(y)) dom[1]++;
     if (y > 0 && m >= 0 && d > 0 && dom[m | 0] >= d) {
