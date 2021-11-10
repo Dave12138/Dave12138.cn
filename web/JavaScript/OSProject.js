@@ -1,4 +1,4 @@
-(function () {
+(function() {
 
     function showPagesDetail(strArr) {
         document.getElementById("PCBDetails").innerHTML = "<tr><th>逻辑号</th><th>内存物理页号</th><th>在内存中</th><th>访问字段</th><th>修改标志</th><th>外存物理页号</th></tr>" + strArr;
@@ -11,7 +11,7 @@
         return o.childNodes[0];
     }
 
-//全局更新ui
+    //全局更新ui
 
     function updateUI() {
         function updateTable(tableId, queue) {
@@ -22,9 +22,9 @@
                 for (let j = 0; j < queue[i].pages.length; j++) {
                     line += `<tr><td>${j}</td>${queue[i].pages[j]}</tr>`;
                 }
-                let nonod = parseElement(`<tr><td>${queue[i].programName}</td><td>${queue[i].usedSize}</td><td>详细</td></tr>`);
+                let nonod = parseElement(`<tr><td>${queue[i].processName}</td><td>${queue[i].usedSize}</td><td>详细</td></tr>`);
                 tableId.append(nonod);
-                nonod.lastElementChild.onclick = function () {
+                nonod.lastElementChild.onclick = function() {
                     showPagesDetail(line);
                 };
             }
@@ -36,9 +36,9 @@
             tableId.innerHTML = "<tr><th>进程名</th><th>到达时刻</th><th>所需时间</th><th>结束时刻</th></tr>";
             for (let i = 0; i < queue.length; i++) {
 
-                let nonod = parseElement(`<tr><td>${queue[i].programName}</td><td>${queue[i].timeCreate}</td><td>${queue[i].timeNeed}</td><td>${queue[i].timeFinish}</td></tr>`);
+                let nonod = parseElement(`<tr><td>${queue[i].processName}</td><td>${queue[i].timeCreate}</td><td>${queue[i].timeNeed}</td><td>${queue[i].timeFinish}</td></tr>`);
                 tableId.append(nonod);
-                nonod.onclick = function () {
+                nonod.onclick = function() {
                     log2.value = `T=${queue[i].T}\nW=${queue[i].W}`;
 
                 };
@@ -88,7 +88,7 @@
     }
 
     class PCB {
-        programName;
+        processName;
         pages;
         usedSize;
         activePageLimit;
@@ -100,8 +100,8 @@
         timeFinish;
         timeInCPU;
 
-        constructor(programName, sizeUsed, timeNeed) {
-            this.programName = programName;
+        constructor(processName, sizeUsed, timeNeed) {
+            this.processName = processName;
             this.usedSize = sizeUsed;
             this.pages = new Array(Math.ceil(sizeUsed / chunkSize));
             this.activePageLimit = 6 < this.pages.length ? 6 : this.pages.length;
@@ -122,8 +122,8 @@
             return count1;
         }
 
-//根据访问字段确定将会被换出的页
-//理论上我应该用链表加工个动态排序队列实现，但想到和直接挨个数一样都是O(n)就放弃了
+        //根据访问字段确定将会被换出的页
+        //理论上我应该用链表加工个动态排序队列实现，但想到和直接挨个数一样都是O(n)就放弃了
         get pageWillBeSwitchOut() {
             let s = -1;
             for (let i = 0; i < this.pages.length; i++) {
@@ -193,28 +193,28 @@
 
         if (CPU == null && readyQueue.length > 0) {
             CPU = readyQueue.shift();
-//CPU.access(0);
+            //CPU.access(0);
         }
 
     }
 
 
     function createNewPcb(form) {
-//新进程
+        //新进程
         let tmp = new PCB(form.elements[0].value, form.elements[1].value | 0, form.elements[2].value | 0);
-        if (tmp.usedSize < 1 || tmp.programName.length < 1) {
+        if (tmp.usedSize < 1 || tmp.processName.length < 1) {
             log1.value = "需要输入完整进程信息";
             return;
         }
-//从外存中分配页给它
+        //从外存中分配页给它
         for (let i = 0; i < tmp.pages.length; i++) {
             let r = ssdStatus.firstUnusedIndex();
             if (r !== undefined) {
                 ssdStatus.changeValueAt(r);
                 tmp.pages[i] = new Page(r);
             } else {
-//外存已满
-//回收所有分配给新进程的外存
+                //外存已满
+                //回收所有分配给新进程的外存
                 for (let j = 0; j < i; j++) {
                     ssdStatus.changeValueAt(tmp.pages[j].ssdAddr);
                 }
@@ -222,7 +222,7 @@
                 return;
             }
         }
-//分配完外存后将其加入就绪队列
+        //分配完外存后将其加入就绪队列
         if (taskPlan === 0) {
             readyQueue.push(tmp);
         } else if (taskPlan === 2) {
@@ -239,7 +239,7 @@
     }
 
 
-//全部物理内存回收
+    //全部物理内存回收
     function recyclePages(pages) {
         for (let i = 0; i < pages.length; i++) {
             recyclePage(pages[i]);
@@ -247,7 +247,7 @@
 
     }
 
-//换出或回收某物理内存中页，返回腾出来的内存块
+    //换出或回收某物理内存中页，返回腾出来的内存块
     function recyclePage(page) {
         if (page.inMem) {
             if (page.isChanged) {
@@ -265,7 +265,7 @@
         return undefined;
     }
 
-//全局换出，返回腾出来的物理内存
+    //全局换出，返回腾出来的物理内存
     function systemSwitchOut() {
         let x = null;
         for (let i = 0; i < blockQueue.length; i++) {
@@ -288,7 +288,7 @@
 
     }
 
-//回收外存
+    //回收外存
     function recycleSSDPages(pages) {
         for (let i = 0; i < pages.length; i++) {
             recycleSSDPage(pages[i]);
@@ -305,7 +305,7 @@
 
     }
 
-//换入页
+    //换入页
     function switchInPage(page) {
         if (page.inMem) {
             alert("调试信息:ERROR");
@@ -353,8 +353,8 @@
 
     }
 
-//bitmap应记录内存中页的使用状况
-//写都写了，外存使用状况也用它记吧
+    //bitmap应记录内存中页的使用状况
+    //写都写了，外存使用状况也用它记吧
     class BitMap {
         maxPages;
         map;
@@ -402,7 +402,7 @@
         }
     }
 
-//UI
+    //UI
     let PCBCreateForm;
     let CPUTable;
     let blockTable;
@@ -412,15 +412,15 @@
     let log2;
     let logicAddrInput;
     let memBitMapTable;
-//实验1
+    //实验1
     let CPU = null;
     let readyQueue;
     let blockQueue;
-//实验2
-    let memoryStatus;//内存分配情况
-    let ssdStatus;//外存分配情况
-    let chunkSize;//块（页）大小，int
-    let mapDic = [];//位操作辅助字典
+    //实验2
+    let memoryStatus; //内存分配情况
+    let ssdStatus; //外存分配情况
+    let chunkSize; //块（页）大小，int
+    let mapDic = []; //位操作辅助字典
 
     /**
      * 0:FIFO先进先出
@@ -436,9 +436,9 @@
     let taskPlan = 0;
     let systemTick = 0;
     let finishArray;
-//初始化
-    (function () {
-//抓取UI
+    //初始化
+    (function() {
+        //抓取UI
         PCBCreateForm = document.getElementById("PCBCreateForm");
         CPUTable = document.getElementById("CPUTable");
         blockTable = document.getElementById("blockTable");
@@ -449,7 +449,7 @@
         logicAddrInput = document.getElementById("logicAddrInput");
         memBitMapTable = document.getElementById("memBitMapTable");
 
-        $("#onProgressCreateButton")[0].onclick = function () {
+        $("#onProgressCreateButton")[0].onclick = function() {
             onProgressCreateButton();
             return false;
         };
@@ -458,14 +458,14 @@
         $("#onProgressEndButton")[0].onclick = onProgressEndButton;
         $("#onTansAddr")[0].onclick = onTansAddr;
         $("#onTansAddrWithWrite")[0].onclick = onTansAddrWithWrite;
-        $("#pageLostProbability")[0].onclick = function () {
+        $("#pageLostProbability")[0].onclick = function() {
             $("#tempOut1")[0].value = CPU.pageLostProbability;
         };
-        $("#sysTickAdd")[0].onclick = (function () {
+        $("#sysTickAdd")[0].onclick = (function() {
             sysTickGo();
             updateUI();
         });
-        $("#averageT")[0].onclick = function () {
+        $("#averageT")[0].onclick = function() {
             let aT = 0;
             let aW = 0;
             let n = finishArray.length;
@@ -475,7 +475,7 @@
             }
             log2.value = `T=${aT / n}\nW=${aW / n}`;
         };
-//从request导入全局设置
+        //从request导入全局设置
         let reqs = window.location.search.split('&');
         for (let i = 0; i < reqs.length; i++) {
             if (/^systemMemSize=(.*)$/.test(reqs[i])) {
@@ -498,24 +498,24 @@
                     $(`#taskType${j + 1}`)[0].checked = (j === taskPlan) ? "checked" : null;
             }
         }
-//凑整
-        (function () {
+        //凑整
+        (function() {
             systemOption.elements[0].value = Math.ceil(systemOption.elements[0].value / (systemOption.elements[1].value)) * systemOption.elements[1].value;
             systemOption.elements[2].value = Math.ceil(systemOption.elements[2].value / (systemOption.elements[1].value)) * systemOption.elements[1].value;
         })();
-//检查参数合法性
-        (function () {
-//true:s是32位正整数或整数字符串
+        //检查参数合法性
+        (function() {
+            //true:s是32位正整数或整数字符串
             function foo(s) {
                 return s / 1 === (s | 0) && s > 0;
             }
 
-//true:s是1或0,不能是字符串
+            //true:s是1或0,不能是字符串
             function fee(s) {
                 return ((s & 1) === s);
             }
 
-//清空设置
+            //清空设置
             function crash(s = "") {
                 alert("全局设置不符合规范  " + s);
                 window.location.search = "";
@@ -532,11 +532,11 @@
                 crash("内存/外存大小不足六倍页大小")
             }
         })();
-//就绪、阻塞队列
+        //就绪、阻塞队列
         readyQueue = [];
         blockQueue = [];
         finishArray = [];
-//初始化bitmap
+        //初始化bitmap
         memoryStatus = new BitMap(Math.floor(systemOption.elements[0].value / systemOption.elements[1].value));
         ssdStatus = new BitMap(Math.floor(systemOption.elements[2].value / systemOption.elements[1].value));
         chunkSize = systemOption.elements[1].value | 0;
@@ -546,7 +546,7 @@
         updateUI();
     })();
 
-//响应
+    //响应
     function onProgressCreateButton() {
         log1.value = "";
         createNewPcb(PCBCreateForm);
@@ -598,12 +598,12 @@
         log2.value = `时刻：${systemTick}\n`;
         if (CPU != null) {
             CPU.run();
-            log2.value += `${CPU.programName} 运行\n`;
+            log2.value += `${CPU.processName} 运行\n`;
             if (CPU.finished) {
                 recyclePages(CPU.pages);
                 recycleSSDPages(CPU.pages);
                 finishArray.push(CPU);
-                log2.value += `${CPU.programName} 结束\n`;
+                log2.value += `${CPU.processName} 结束\n`;
                 CPU.pages = [];
                 CPU = null;
             }
